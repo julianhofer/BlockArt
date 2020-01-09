@@ -19,18 +19,10 @@ class App extends Component {
     account: null
   };
 
-
-
-
   componentDidMount = async () => {
 
-
     try {
-      // Get network provider and web3 instance.
       const web3 = await getConnection();
-
-
-      // Use web3 to get the user's accounts.
       const account = await web3.eth.getAccounts();
 
       this.setState({ account: account[0] });
@@ -39,8 +31,6 @@ class App extends Component {
       const network = await web3.eth.net.getNetworkType();
       console.log("Netzwerk: ", network);
 
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
       this.setState({
         web3,
         account
