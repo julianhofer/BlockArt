@@ -6,9 +6,16 @@ contract Ownership {
 
   constructor() public {
     owner = msg.sender;
+    //hash
   }
 
   modifier restricted() {
     if (msg.sender == owner) _;
   }
+    // Setzt neuen Owner für den SmartContract
+  function changeOwner(address new_address) public restricted {
+    
+  }
+
+
 }
