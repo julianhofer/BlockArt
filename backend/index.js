@@ -38,7 +38,7 @@ app.get('/api/users/:id', (req, res) => {
 app.post('/api/users', (req, res) => {
     let data = {
         firstname: req.body.firstname, lastname: req.body.lastname, email: req.body.email,
-        pubKey: req.body.pubKey
+        pubKey: req.body.pubKey, password: req.body.password
     };
     let sql = "INSERT INTO users SET ?";
     let query = conn.query(sql, data, (err, results) => {
@@ -50,7 +50,7 @@ app.post('/api/users', (req, res) => {
 //update user
 app.put('/api/users/:id', (req, res) => {
     let sql = "UPDATE users SET firstname='" + req.body.firstname + "', lastname='" + req.body.lastname
-        + "', email='" + req.body.email + "', pubKey='" + req.body.pubKey + "' WHERE user_id=" + req.params.user_id;
+        + "', email='" + req.body.email + "', password='" + req.body.password + "', pubKey='" + req.body.pubKey + "' WHERE user_id=" + req.params.user_id;
     let query = conn.query(sql, (err, results) => {
         if (err) throw err;
         res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
