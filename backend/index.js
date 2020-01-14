@@ -26,8 +26,17 @@ app.get('/api/users', (req, res) => {
 });
 
 //show single user by id
-app.get('/api/users/:id', (req, res) => {
+app.get('/api/users/:user_id', (req, res) => {
     let sql = "SELECT * FROM users WHERE user_id=" + req.params.user_id;
+    let query = conn.query(sql, (err, results) => {
+        if (err) throw err;
+        res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+    });
+});
+
+//show single user by pubKey
+app.get('/api/users/pubKey/:pubKey', (req, res) => {
+    let sql = "SELECT * FROM users WHERE pubKey=" + "'" + req.params.pubKey + "'";
     let query = conn.query(sql, (err, results) => {
         if (err) throw err;
         res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
@@ -48,7 +57,7 @@ app.post('/api/users', (req, res) => {
 });
 
 //update user
-app.put('/api/users/:id', (req, res) => {
+app.put('/api/users/:user_id', (req, res) => {
     let sql = "UPDATE users SET firstname='" + req.body.firstname + "', lastname='" + req.body.lastname
         + "', email='" + req.body.email + "', password='" + req.body.password + "', pubKey='" + req.body.pubKey + "' WHERE user_id=" + req.params.user_id;
     let query = conn.query(sql, (err, results) => {
@@ -58,7 +67,7 @@ app.put('/api/users/:id', (req, res) => {
 });
 
 //Delete user
-app.delete('/api/users/:id', (req, res) => {
+app.delete('/api/users/:user_id', (req, res) => {
     let sql = "DELETE FROM users WHERE user_id=" + req.params.user_id + "";
     let query = conn.query(sql, (err, results) => {
         if (err) throw err;
