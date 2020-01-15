@@ -11,6 +11,7 @@
     "android-windows": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && react-native run-android"
   },
   "dependencies": {
+    "ethers": "^4.0.43",
     "react": "16.9.0",
     "react-native": "0.61.5"
   },
