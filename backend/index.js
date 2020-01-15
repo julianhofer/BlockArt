@@ -59,7 +59,7 @@ app.post('/api/users', (req, res) => {
 //update user
 app.put('/api/users/:user_id', (req, res) => {
     let sql = "UPDATE users SET firstname='" + req.body.firstname + "', lastname='" + req.body.lastname
-        + "', email='" + req.body.email + "', password='" + req.body.password + "', pubKey='" + req.body.pubKey + "' WHERE user_id=" + req.params.user_id;
+        + "', email='" + req.body.email + "', password= MD5('" + req.body.password + "'), pubKey='" + req.body.pubKey + "' WHERE user_id=" + req.params.user_id;
     let query = conn.query(sql, (err, results) => {
         if (err) throw err;
         res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
