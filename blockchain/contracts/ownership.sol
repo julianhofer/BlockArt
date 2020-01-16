@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.7.0;
 
 contract Ownership {
-  address owner;
+  address public owner;
   bytes32 name;
   bytes32 artHash;
 
@@ -13,35 +13,54 @@ contract Ownership {
   //   modifier restricted() {
   //   if (msg.sender == owner) _;
   // }
+
+      function ownable() public {
+        owner = msg.sender;
+    }
+
+    modifier isOwner() {
+        require(msg.sender == owner);
+        _;
+    }
   
   struct ArtMapping {
     	uint timestamp;
-      bytes32 owner;
+      address owner;
       bytes32 artHash;
   }
 
   mapping (string => ArtMapping) artwork;
 
+  // validates the current Ownership
   event ArtLogStatus(bool status, uint timestamp, bytes32 owner, bytes32 artHash);
+
+  // triggers event of the Ownership transfer
+  event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
   // stores the owner of the artwork in a timestamp block
   function setOwner(bytes32 owner, bytes32 artHash) public {
-    if (artwork[artHash].timestamp == 0){
+    if (artwork[artHash].timestamp == 0) {
       artwork[artHash] = ArtMapping(block.timestamp, owner);
 
-      //triggers an event to frontend as validation since when and who owns the artwork
+      // triggers an event to the frontend as validation since when and who owns the artwork
       ArtLogStatus(true, block.timestamp, owner, artHash);
-    }
-    else {
-
+    } else {
       // returns a false value to frontend
       ArtLogStatus(false, block.timestamp, owner, artHash);
     }
   }
 
   // returns artwork information to the frontend
-  function getOwner(bytes32 artHash) internal view returns (uint timestamp, bytes32 owner){
+  function getOwner(bytes32 artHash) internal view returns (uint timestamp, bytes32 owner) {
     return (artwork[artHash].timestamp, artwork[artHash].owner);
+  }
+
+  // transfers the ownership of the contract to a new adress
+  function transferOwnership(address newOwner) public isOwner {
+    // function just can be called from the previous owner
+    require(newOwner != address(0));
+    OwnershipTransferred(owner, newOwner);
+    owner = newOwner;
   }
 
 
