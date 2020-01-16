@@ -1,45 +1,57 @@
-pragma solidity >=0.4.21 <0.7.0;
+pragma solidity >=0.4.22 <0.7.0;
 
 contract Ownership {
   address public owner;
+  bytes32 name;
+  bytes32 artHash;
 
-  constructor() public {
-    owner = msg.sender;
-  }
-    modifier restricted() {
-    if (msg.sender == owner) _;
-  }
+    modifier isOwner() {
+        require(msg.sender == owner);
+        _;
+    }
   
-  struct ArtMapping {
-    	uint timestamp;
-      string owner;
-      string artHash;
-  }
-
-  mapping (string => ArtMapping) artwork;
-
-  event ArtLogStatus(bool status, uint timestamp, string owner, string artHash);
-
-  // stores the owner of the artwork in a timestamp block
-  function setOwner(string owner, string artHash) public {
-    if (artwork[artHash].timestamp == 0){
-      artwork[artHash] = ArtMapping(block.timestamp, owner);
-
-      //triggers an event to frontend as validation since when and who owns the artwork
-      ArtLogStatus(true, block.timestamp, owner, artHash);
+    struct ArtMapping {
+        uint timestamp;
+        address owner;
     }
-    else {
 
-      // returns a false value to frontend
-      ArtLogStatus(false, block.timestamp, owner, artHash);
+    // validates the current Ownership
+    event ArtLogStatus(bool status, uint timestamp, address owner, bytes32 artHash);
+    
+    // triggers event of the Ownership transfer
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    
+    mapping (bytes32 => ArtMapping) artwork;
+    
+  constructor(bytes32 _name) public {
+      owner = msg.sender;
+      name = _name;
     }
-  }
-
-  // returns artwork information to the frontend
-  function getOwner(string artHash) internal view returns (uint timestamp, string owner){
-    return (artwork[artHash].timestamp, artwork[artHash].owner);
-  }
-
-
+    
+    // stores the owner of the artwork in a timestamp block
+    function setOwner(address _owner, bytes32 _artHash) public {
+        if (artwork[_artHash].timestamp == 0) {
+          artwork[_artHash] = ArtMapping(block.timestamp, _owner);
+        
+          // triggers an event to the frontend as validation since when and who owns the artwork
+          emit ArtLogStatus(true, block.timestamp, _owner, artHash);
+        } else {
+          // returns a false value to frontend
+          emit ArtLogStatus(false, block.timestamp, _owner, artHash);
+        }
+    }
+    
+    // returns artwork information to the frontend
+    function getOwner(bytes32 _artHash) internal view returns (uint, address) {
+        return (artwork[_artHash].timestamp, artwork[_artHash].owner);
+    }
+    
+    // transfers the ownership of the contract to a new adress
+    function transferOwnership(address _newOwner) public isOwner {
+        // function just can be called from the previous owner
+        require(_newOwner != address(0));
+        emit OwnershipTransferred(owner, _newOwner);
+        owner = _newOwner;
+    }
 
 }
