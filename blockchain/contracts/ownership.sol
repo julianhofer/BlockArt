@@ -1,27 +1,31 @@
-pragma solidity >=0.4.21 <0.7.0;
+pragma solidity >=0.4.22 <0.7.0;
 
 contract Ownership {
-  address public owner;
+  address owner;
+  bytes32 name;
+  bytes32 artHash;
 
-  constructor() public {
-    owner = msg.sender;
-  }
-    modifier restricted() {
-    if (msg.sender == owner) _;
-  }
+  // constructor(bytes32 _name) public {
+  //    owner = msg.sender;
+  //     name = _name;
+  // }
+
+  //   modifier restricted() {
+  //   if (msg.sender == owner) _;
+  // }
   
   struct ArtMapping {
     	uint timestamp;
-      string owner;
-      string artHash;
+      bytes32 owner;
+      bytes32 artHash;
   }
 
   mapping (string => ArtMapping) artwork;
 
-  event ArtLogStatus(bool status, uint timestamp, string owner, string artHash);
+  event ArtLogStatus(bool status, uint timestamp, bytes32 owner, bytes32 artHash);
 
   // stores the owner of the artwork in a timestamp block
-  function setOwner(string owner, string artHash) public {
+  function setOwner(bytes32 owner, bytes32 artHash) public {
     if (artwork[artHash].timestamp == 0){
       artwork[artHash] = ArtMapping(block.timestamp, owner);
 
@@ -36,7 +40,7 @@ contract Ownership {
   }
 
   // returns artwork information to the frontend
-  function getOwner(string artHash) internal view returns (uint timestamp, string owner){
+  function getOwner(bytes32 artHash) internal view returns (uint timestamp, bytes32 owner){
     return (artwork[artHash].timestamp, artwork[artHash].owner);
   }
 
