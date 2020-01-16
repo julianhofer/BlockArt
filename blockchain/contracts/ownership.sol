@@ -23,9 +23,9 @@ contract Ownership {
     
     mapping (bytes32 => ArtMapping) artwork;
     
-    constructor(bytes32 _name) public {
-        owner = msg.sender;
-        name = _name;
+  constructor(bytes32 _name) public {
+      owner = msg.sender;
+      name = _name;
     }
     
     // stores the owner of the artwork in a timestamp block
