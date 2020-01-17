@@ -39,7 +39,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n            \"firstname\": \"Franz\",\n            \"lastname\": \"Der Zweite\",\n            \"email\": \"franz@test.de\",\n            \"pubKey\": \"IULKJHDKUHGD75JGJHDOIHDJHGS\",\n            \"password\": \"beschdeLeben123\"\n}",
+					"raw": "{\n            \"firstname\": \"Helmut\",\n            \"lastname\": \"Kohl\",\n            \"email\": \"helmut@test.de\",\n            \"pubKey\": \"HELMUTKOHLPUBLICKEY\",\n            \"password\": \"helmutdererste\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
