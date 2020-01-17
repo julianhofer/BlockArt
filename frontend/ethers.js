@@ -16,6 +16,7 @@ infuraProvider.getBalance(address).then((balance) => {
 
     console.debug("Balance: " + etherString);
 });
+
 console.log("Balance: " + etherString);
 console.log("log");
 console.debug("debug");
