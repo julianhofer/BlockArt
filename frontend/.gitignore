@@ -59,4 +59,4 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-frontend/android/app/src/main/assets/
+/android/app/src/main/assets/
