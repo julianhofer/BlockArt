@@ -1,143 +1,50 @@
+// const contract = require('./BCConnection');
+const wallets = require('./wallets');
+const privateKeys = require('./keys');
 const ethers = require('ethers');
+// const provider = require('./BCConnection');
+// const contractAddress = require('./BCConnection');
+// const abi = require('./abi');
+const smartContract = require('./contracts/ArtWorkContract')
 
-let provider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad');
+// contract.owner().then((owner) => {
+
+//     console.log("currentOwner: ", owner)
+
+// });
+
+// contract.artHash().then((artHash) => {
+//     console.log("artHash: ", artHash)
+// });
+
+// contract.logs([]).then((log) => {
+
+//     console.log("alle logs: ", log)
+
+// });
+
 
 const contractAddress = '0x36ed56f5e2160d46c3cbeee285298cbe2f0b0022';
-
-
-const abi = [
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_newOwner",
-                "type": "address"
-            }
-        ],
-        "name": "transferOwnership",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_artHash",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "name": "previousOwner",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "name": "newOwner",
-                "type": "address"
-            }
-        ],
-        "name": "OwnershipTransferred",
-        "type": "event"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "artHash",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "getLogLength",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "logs",
-        "outputs": [
-            {
-                "name": "currentOwner",
-                "type": "address"
-            },
-            {
-                "name": "ownershipStartTime",
-                "type": "uint256"
-            },
-            {
-                "name": "ownershipEndTime",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "owner",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    }
-];
+const provider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad');
+const abi = smartContract.abi;
 
 const contract = new ethers.Contract(contractAddress, abi, provider);
 
-contract.owner().then((owner) => {
+let wallet = new ethers.Wallet("0x" + privateKeys[1], provider);
+let contractWithSigner = contract.connect(wallet);
 
-    console.log("currentOwner: ", owner)
+(async function () {
 
-});
+    let transferOs = await contractWithSigner.transferOwnership("0x" + wallets[0]);
+    console.log("TransferHash: ", transferOs.hash);
 
-contract.logs([]).then((log) => {
+    await transferOs.wait();
 
-    console.log("alle logs: ", log)
+    let newOwner = await contract.owner();
 
-});
+    console.log("newOwner: ", newOwner);
 
-// contract.logs[1].then((log) => {
-
-//     console.log("zweites log: ", log)
-
-// });
+})();
 
 
 contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
@@ -145,5 +52,8 @@ contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
     console.log(previousOwner);
     console.log(newOwner);
 
+    contract.artHash().then((artHash) => {
+        console.log("artHash: ", artHash)
+    });
 });
 
