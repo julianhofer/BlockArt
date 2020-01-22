@@ -1,3 +1,7 @@
+// import 'ethers/dist/shims.js';
+const ethers = require('ethers');
+
+
 // const infuraProvider = require('./BCConnection');
 // let contract = require('./BCConnection');
 // import { contract } from './BCConnection';
@@ -12,7 +16,7 @@
 
 // });
 
-provider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad');
+let provider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad');
 
 const contractAddress = '0x36ed56f5e2160d46c3cbeee285298cbe2f0b0022';
 
@@ -137,12 +141,14 @@ contract.owner().then((owner) => {
     console.log("currentOwner: ", owner)
 
 });
+// const logs = "";
+// contract.logs([]).then((log) => {
+//     logs = log;
+//     console.log("alle logs: ", log)
 
-contract.logs([]).then((log) => {
+// });
 
-    console.log("alle logs: ", log)
 
-});
 
 // contract.logs[1].then((log) => {
 
@@ -151,12 +157,7 @@ contract.logs([]).then((log) => {
 // });
 
 
-contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
-    // Called when anyone changes the value
-    console.log(previousOwner);
-    console.log(newOwner);
 
-});
 
 
 
