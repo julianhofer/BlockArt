@@ -4,6 +4,14 @@ const ethers = require('ethers');
 const smartContract = require('./contracts/ArtWorkContract')
 
 
+
+// contract.artHash().then((artHash) => {
+//     console.log("artHash: ", artHash)
+// });
+
+
+
+
 const contractAddress = '0x36ed56f5e2160d46c3cbeee285298cbe2f0b0022';
 const provider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad');
 const abi = smartContract.abi;
@@ -12,43 +20,41 @@ const contract = new ethers.Contract(contractAddress, abi, provider);
 let wallet = new ethers.Wallet("0x" + privateKeys[1], provider);
 let contractWithSigner = contract.connect(wallet);
 
-(async function () {
+transferOwner();
+transferEvent();
 
-    let transferOs = await contractWithSigner.transferOwnership("0x" + wallets[0]);
-    console.log("TransferHash: ", transferOs.hash);
-
-    await transferOs.wait();
-
-    let newOwner = await contract.owner();
-
-    console.log("newOwner: ", newOwner);
-
-})();
-
-contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
-
-    console.log(previousOwner);
-    console.log(newOwner);
-
-    contract.artHash().then((artHash) => {
-        console.log("artHash: ", artHash)
+async function transferOwner() {
+    contract.owner().then((owner) => {
+        console.log("oldOwner: ", owner)
     });
-});
+    try {
+        let transferOs = await contractWithSigner.transferOwnership("0x" + wallets[2]);
+        console.log("TransferHash: ", transferOs.hash);
+        await transferOs.wait();
+        let newOwner = await contract.owner();
 
 
+    } catch (err) {
+        logger.error("Error while transfering Ownership")
+    }
+};
 
-// contract.owner().then((owner) => {
+// Called when anyone changes the value
+function transferEvent() {
+    contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
 
-//     console.log("currentOwner: ", owner)
+        console.log("newOwner: ", newOwner);
 
-// });
+        contract.artHash().then((artHash) => {
+            console.log("of Picture with artHash: ", artHash)
+        });
 
-// contract.artHash().then((artHash) => {
-//     console.log("artHash: ", artHash)
-// });
+        return newOwner;
+    });
+}
+
 
 // contract.logs([]).then((log) => {
-
-//     console.log("alle logs: ", log)
-
+//     console.log("log: ", log)
 // });
+
