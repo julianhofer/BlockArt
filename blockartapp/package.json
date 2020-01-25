@@ -1,0 +1,38 @@
+{
+  "name": "blockartapp",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@okta/configuration-validation": "^0.4.1",
+    "@okta/okta-auth-js": "^2.8.0",
+    "@okta/okta-react-native": "^1.2.1",
+    "react": "16.8.6",
+    "react-native": "0.60.5",
+    "react-native-gesture-handler": "^1.4.1",
+    "react-native-inappbrowser-reborn": "^3.3.4",
+    "react-native-loading-spinner-overlay": "^1.0.1",
+    "react-navigation": "^4.0.6",
+    "react-navigation-stack": "^1.8.0",
+    "react-native-nfc-manager": "^2.0.3",
+    "react-native-snap-carousel": "^3.8.4",
+    "styled-components": "^5.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/runtime": "^7.6.0",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-jest": "^24.9.0",
+    "eslint": "^6.4.0",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.56.0",
+    "react-test-renderer": "16.8.6"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
