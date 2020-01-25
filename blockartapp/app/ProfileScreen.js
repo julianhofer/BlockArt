@@ -32,6 +32,7 @@ import configFile from './../samples.config';
 
 
 
+
 export default class ProfileScreen extends React.Component {
   static navigationOptions = {
     title: 'User Profile',
@@ -99,6 +100,7 @@ export default class ProfileScreen extends React.Component {
     const {navigation} = this.props;
     const transaction = navigation.getParam('transaction', 'NO-ID');
     const userProfile = transaction.data._embedded.user.profile;
+    const userId = transaction.data._embedded.user.id;
     let accessTokenArea;
     let idtokenarea;
     if (this.state.authenticated) {
@@ -158,7 +160,7 @@ export default class ProfileScreen extends React.Component {
           <Text style={styles.titleHello}>
             Hello {userProfile.firstName} {userProfile.lastName}
           </Text>
-          <Text style={styles.titleDetails}>Login: {userProfile.login}</Text>
+          <Text style={styles.titleDetails}>Login: {userProfile.login} ({userId})</Text>
           <Text style={styles.titleDetails}>
             Session expires: {transaction.expiresAt}
           </Text>

@@ -1,20 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
     View,
     Text,
+    Image,
     TextInput,
     Alert,
     Platform,
     Dimensions,
     ImageBackground,
-    TouchableOpacity
+    TouchableOpacity,
+    Button,
 } from 'react-native';
 
 import NfcManager, { NfcEvents, Ndef } from 'react-native-nfc-manager';
 import Carousel from 'react-native-snap-carousel';
 import styled from "styled-components"; // 3.1.6
+import { ScrollView } from 'react-native-gesture-handler';
+
 
 const {width, height} = Dimensions.get('window');
 
@@ -28,11 +32,23 @@ this.state = {
             price: "",
             location: "",
             owner: "",
-            blockchain: ""
+            blockchain: "",
+            ownerName : ""
         }
         this._carousel = {};
         this.init();
     }
+
+      async getUsers() {
+        try {
+      let response = await fetch('10.0.2.2:3000/api/users', );
+      let responseJson = await response.json();
+      console.log(responseJson);
+      } catch(error){
+        console.error(error);
+      }
+      }
+  
 
 
   init(){
@@ -54,24 +70,36 @@ this.state = {
       ]
     };
 
+
     console.log("ThumbnailCarousel Props: ", this.props)
+    //this.getUsers()
   }
+
+  
 
   changeText(index){
     if (index==0){
       this.setState({
         title: "BlockCeption",
         artists: "Parco Macher",
+        owner: "00u11let9NMY0oS0Q4x6",
+        ownerName: "YOU!!!"
       })
     } else if (index == 1){
       this.setState({
         title: "BlockCircle",
         artists: "Julian Hanser",
+        owner: "",
+        ownerName: "NOT YOU!!!",
+        
       })
     }else {
       this.setState({
         title: "Blocks",
         artists: "Eberhardt Frick",
+        owner: "",
+        ownerName: "NOT YOU!!!",
+
       })
     }
   }
@@ -110,7 +138,7 @@ _renderItem = ( {item, index} ) => {
                 this.setState({
                   price: "-",
                   location: "-",
-                  owner: "-",
+                  //owner: "-",
                   blockchain: "-"
                 })
                 this._carousel.snapToItem(index);
@@ -194,11 +222,53 @@ handleSnapToItem(index){
         }
       }
 
+      _sell = async() => {
+        Alert.alert("Sell artwork " + this.state.title)
+      }
+
+      _buy = async() => {
+        Alert.alert("Buy artwork " + this.state.title)
+      }
+
+      _profile = async() => {
+       Alert.alert("pressed")
+      }
+        
+        
+      
 
 
     
 render(){
+  let artTradeArea;
+
+   {   if(this.state.owner == this.props.navigation.getParam('transaction', 'NO-ID').data._embedded.user.id){
+        artTradeArea = (
+          <TouchableOpacity
+          onPress={this._sell}
+          style={styles.buttonSell}>
+          <Text style={styles.buttonText}>Kunstwerk verkaufen</Text>
+      </TouchableOpacity>
+        );
+             
+        }
+        else{
+          artTradeArea = (
+        <TouchableOpacity
+           onPress={this._buy}
+           style={styles.buttonBuy}>
+           <Text style={styles.buttonText}>Kunstwerk kaufen</Text>
+       </TouchableOpacity>
+          );
+           
+        } } 
+
         return (
+          <ScrollView keyboardShouldPersistTaps={true}>
+          <Fragment>
+            <SafeAreaView style={styles.container}> 
+
+           
           <ImageBackground
   source={require('./components/background.jpg')}
   style={{height: height,
@@ -206,8 +276,17 @@ render(){
           resizeMode: "cover",
           overflow: "hidden",
           flex: 1}}>
-            <SafeAreaView style={styles.container}> 
-             <Text style={styles.heading}>BlockArt</Text>    
+
+          
+<TouchableOpacity
+           onPress={this._profile}
+           >
+           <Image source={require('./components/user_icon.png')} style={{height: 50, width : 50, position: "absolute", right: 10, top: 10}}/>
+       </TouchableOpacity>
+
+         
+             <Text style={styles.heading}>BlockArt</Text>  
+              
             <CarouselBackgroundView>
             <Carousel
             style={styles.Carousel}
@@ -227,18 +306,34 @@ render(){
                     <Text style={styles.infotext}>Künstler: {this.state.artists}</Text>
                     <Text style={styles.infotext}>Preis: {this.state.price}</Text>
                     <Text style={styles.infotext}>Standort: {this.state.location}</Text>
-                    <Text style={styles.infotext}>Eigentümer: {this.state.owner}</Text>
+                    <Text style={styles.infotext}>Eigentümer: {this.state.ownerName}</Text>
                     <Text style={styles.infotext}>Position in Blockchain: {this.state.blockchain}</Text>
                 </View>
-
+                </ImageBackground>
+                <ImageBackground
+  source={require('./components/background-flipped.jpg')}
+  style={{height: height/4,
+          width: width,
+          resizeMode: "cover",
+          overflow: "hidden",
+          flex: 1}}>
         <TouchableOpacity
             onPress={this._test}
             style={styles.buttonRead}>
             <Text style={styles.buttonText}>Kunstwerk lesen</Text>
         </TouchableOpacity>
+
+      
         
-            </SafeAreaView>
-            </ImageBackground>
+          {artTradeArea}
+
+        
+           </ImageBackground>
+            
+            
+             </SafeAreaView>
+             </Fragment>
+             </ScrollView>
         )
     }
 }
@@ -282,6 +377,26 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#006C5B'
     },
+    buttonSell: {
+      marginLeft: 20,
+      marginRight: 20,
+      height: 50,
+      marginBottom: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 8,
+      backgroundColor: '#9D2235'
+  },
+  buttonBuy: {
+    marginLeft: 20,
+    marginRight: 20,
+    height: 50,
+    marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    backgroundColor: '#4293f5'
+},
     buttonText: {
         color: 'white',
         fontSize: 20,

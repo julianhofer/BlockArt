@@ -17,9 +17,16 @@ import ProfileScreen from './app/ProfileScreen.js';
 import CarouselScreen from './app/CarouselScreen.js';
 
 const MainNavigator = createStackNavigator({
-  LoginScreen: {screen: LoginScreen},
-  Profile: {screen: ProfileScreen},
-  Carousel: {screen: CarouselScreen},
+  LoginScreen: {screen: LoginScreen, navigationOptions: {
+    header: null,
+  }},
+  Profile: {screen: ProfileScreen,navigationOptions: {
+    header: null,
+  } },
+  Carousel: {screen: CarouselScreen, navigationOptions: {
+    header: null,
+  }},
+
 });
 
 const App = createAppContainer(MainNavigator);
