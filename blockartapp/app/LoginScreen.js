@@ -21,12 +21,16 @@ import {
   TextInput,
   Image,
   Linking,
+  ImageBackground,
+  Dimensions,
+  Alert,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
-    title: 'Login',
+    title: 'BlockArt',
   };
 
   constructor() {
@@ -35,6 +39,8 @@ export default class LoginScreen extends React.Component {
       userName: '',
       password: '',
       progress: false,
+      screenWidth: Math.round(Dimensions.get('window').width),
+      screenHeight: Math.round(Dimensions.get('window').height),
     };
     var OktaAuth = require('@okta/okta-auth-js');
     var config = {
@@ -56,69 +62,133 @@ export default class LoginScreen extends React.Component {
         self.setState({progress: false});
         if (transaction.status === 'SUCCESS') {
           const {navigate} = self.props.navigation;
-          navigate('Carousel', {transaction: transaction});
+          navigate('Profile', {transaction: transaction});
         } else {
           throw 'We cannot handle the ' + transaction.status + ' status';
         }
       })
       .fail(function(err) {
+        Alert.alert("Der Login war nicht erfolgreich!");
         console.error(err);
         self.setState({progress: false});
       });
   }
 
+  async openLink() {
+    try {
+      const url = 'https://dev-665917.okta.com/signin/register'
+      if (await InAppBrowser.isAvailable()) {
+        const result = await InAppBrowser.open(url, {
+          // iOS Properties
+          dismissButtonStyle: 'cancel',
+          preferredBarTintColor: '#453AA4',
+          preferredControlTintColor: 'white',
+          readerMode: false,
+          animated: true,
+          modalPresentationStyle: 'overFullScreen',
+          modalTransitionStyle: 'partialCurl',
+          modalEnabled: true,
+          enableBarCollapsing: false,
+          // Android Properties
+          showTitle: false,
+          toolbarColor: '#6200EE',
+          secondaryToolbarColor: 'black',
+          enableUrlBarHiding: true,
+          enableDefaultShare: true,
+          forceCloseOnRedirection: true,
+          // Specify full animation resource identifier(package:anim/name)
+          // or only resource name(in case of animation bundled with app).
+          animations: {
+            startEnter: 'slide_in_right',
+            startExit: 'slide_out_left',
+            endEnter: 'slide_in_left',
+            endExit: 'slide_out_right'
+          },
+          headers: {
+            'blockartheader': 'Register for BlockArt Application'
+          }
+        })
+        // Alert.alert(JSON.stringify(result))
+      }
+      else Linking.openURL(url)
+    } catch (error) {
+      Alert.alert(error.message)
+    }
+  }
+
+
+
   render() {
     return (
-      <Fragment>
-        <StatusBar barStyle="dark-content" />
-        <SafeAreaView style={styles.container}>
-          <Spinner
-            visible={this.state.progress}
-            textContent={'Loading...'}
-            textStyle={styles.spinnerTextStyle}
-          />
+             
+       <Fragment>
+       <StatusBar barStyle="dark-content" />
+       <SafeAreaView style={styles.container}>
+         <Spinner
+           visible={this.state.progress}
+           textContent={'Loading...'}
+           textStyle={styles.spinnerTextStyle}
+         />
 
+    <ImageBackground
+      source={require('./components/background.jpg')}
+      imageStyle= {{opacity:0.5}}
+      style={{height: this.state.screenHeight,
+              width: this.state.screenWidth,
+              resizeMode: "cover",
+              overflow: "hidden",
+              flex: 1,
+              }}>
 
-               <Image
-          style={{width: 350, height: 120}}
-          source={require('./components/Logo_schwarz.png')}
-        />
+              <Image
+         style={{width: this.state.screenWidth-40, 
+          height: (this.state.screenWidth/3.5), margin:20,
+          }}
+         source={require('./components/Logo_schwarz.png')}
+       />
+       
         
-         
-          <Text style={styles.title}>Willkommen bei BlockArt</Text>
-          <View style={styles.buttonContainer}>
-            <View style={styles.button}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Login"
-                onChangeText={text => (this.state.userName = text)}
-              />
-              <TextInput
-                style={styles.textInput}
-                placeholder="Password"
-                secureTextEntry={true}
-                onChangeText={text => (this.state.password = text)}
-              />
-              <View style={{marginTop: 40, height: 40}}>
-                <Button
-                  testID="loginButton"
-                  onPress={async () => {
-                    this.state.progress = true;
-                    this.login();
-                  }}
-                  title="Login"
-                />
-              </View>
+         {/* <Text style={styles.title}>Login</Text> */}
+         <View style={styles.buttonContainer}>
+           <View style={styles.button}>
+             <TextInput
+               style={styles.textInput}
+               placeholder="E-Mail"
+               onChangeText={text => (this.state.userName = text)}
+             />
+             <TextInput
+               style={styles.textInput}
+               placeholder="Password"
+               secureTextEntry={true}
+               onChangeText={text => (this.state.password = text)}
+             />
+             <View style={{marginTop: 40, height: 40}}>
+               <Button
+                 testID="loginButton"
+                 color="#004274"
+                 onPress={async () => {
+                   this.state.progress = true;
+                   this.login();
+                 }}
+                 title="Login"
+                 
+               />
+             </View>
+              <Text style={styles.registerText}>Don't have an account? </Text>
+           
+      <Button title="Register"  color="#004274" onPress={ ()=>{this.openLink()}} />
+     
+           </View>
+           
+         </View>
 
-            
-       <Button title="Register" onPress={ ()=>{ Linking.openURL('https://dev-665917.okta.com/signin/register')}} />
+         </ImageBackground>
+         
+       </SafeAreaView>
+
+       </Fragment>
       
-            </View>
-            
-          </View>
-          
-        </SafeAreaView>
-      </Fragment>
+     
     );
   }
 }
@@ -132,10 +202,12 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
+    backgroundColor: '#FFFFFF'
   },
   buttonContainer: {
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 10,
   },
   button: {
@@ -155,8 +227,15 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: '#0066cc',
-    paddingTop: 40,
+    color: '#000000',
+    paddingTop: 20,
     textAlign: 'center',
   },
+  registerText: {
+    fontSize: 15,
+    fontWeight: "bold",
+    paddingTop: 10,
+    textAlign: "center",
+    paddingBottom: 5,
+  }
 });
