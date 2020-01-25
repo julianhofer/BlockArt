@@ -62,7 +62,7 @@ export default class LoginScreen extends React.Component {
         self.setState({progress: false});
         if (transaction.status === 'SUCCESS') {
           const {navigate} = self.props.navigation;
-          navigate('Profile', {transaction: transaction});
+          navigate('Carousel', {transaction: transaction});
         } else {
           throw 'We cannot handle the ' + transaction.status + ' status';
         }
