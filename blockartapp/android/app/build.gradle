@@ -194,7 +194,7 @@ dependencies {
     implementation project(':react-native-inappbrowser-reborn')
     implementation project(':@okta_okta-react-native')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+    compile ("com.facebook.react:react-native:0.60.5") { force = true }  // From node_modules
 
     if (enableHermes) {
       def hermesPath = "../../node_modules/hermesvm/android/";
