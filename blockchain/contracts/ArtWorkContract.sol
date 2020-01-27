@@ -41,8 +41,9 @@ contract ArtWorkContract {
         
         logs.push(Log(_newOwner, timestamp, now));
         timestamp = now;
-        owner = _newOwner;
         emit OwnershipTransferred(owner, _newOwner);
+        owner = _newOwner;
+        
     }
     
 }
