@@ -27,6 +27,7 @@ import {
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
+import axios from 'axios';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -36,11 +37,13 @@ export default class LoginScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      userName: '',
-      password: '',
+      userName: 'jon@test.de',
+      password: 'Blockartuser3',
       progress: false,
       screenWidth: Math.round(Dimensions.get('window').width),
       screenHeight: Math.round(Dimensions.get('window').height),
+      owners: [],
+      users: [],
     };
     var OktaAuth = require('@okta/okta-auth-js');
     var config = {
@@ -50,9 +53,30 @@ export default class LoginScreen extends React.Component {
     this.authClient = new OktaAuth(config);
   }
 
+  
+
   async login() {
     let self = this;
     this.setState({progress: true});
+    let owners;
+    let users;
+
+      axios.get('http://10.0.2.2:3000/api/ownership/').then(response => {
+       // console.log(response.data.response);
+        owners = response.data.response;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    
+      axios.get('http://10.0.2.2:3000/api/users/').then(response => {
+        // console.log(response.data.response);
+        users = response.data.response;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+   
     this.authClient
       .signIn({
         username: this.state.userName,
@@ -60,9 +84,14 @@ export default class LoginScreen extends React.Component {
       })
       .then(function(transaction) {
         self.setState({progress: false});
+
+
         if (transaction.status === 'SUCCESS') {
+
+          console.log(owners);
+          console.log(users);
           const {navigate} = self.props.navigation;
-          navigate('Carousel', {transaction: transaction});
+          navigate('Carousel', {transaction: transaction, users: users, owners: owners});
         } else {
           throw 'We cannot handle the ' + transaction.status + ' status';
         }
@@ -73,6 +102,7 @@ export default class LoginScreen extends React.Component {
         self.setState({progress: false});
       });
   }
+
 
   async openLink() {
     try {

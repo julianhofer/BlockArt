@@ -20,12 +20,15 @@ const MainNavigator = createStackNavigator({
   LoginScreen: {screen: LoginScreen, navigationOptions: {
     header: null,
   }},
-  Profile: {screen: ProfileScreen,navigationOptions: {
-    header: null,
-  } },
+ 
   Carousel: {screen: CarouselScreen, navigationOptions: {
     header: null,
   }},
+
+  Profile: {screen: ProfileScreen,navigationOptions: {
+    header: null,
+  } },
+
 
 });
 
