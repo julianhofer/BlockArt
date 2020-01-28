@@ -68,9 +68,7 @@ class CarouselScreen extends Component {
     };
 
     console.log("ThumbnailCarousel Props: ", this.props);
-    console.log("Owner des ersten Bildes" , this.getOwnerOf("0x2b12a12e72407b459e7ea7277c90ffea17de1e68e63eb5cf95db93fd1cbca6a4"));
-
-
+   
   }
 
   changeText(index) {
@@ -246,7 +244,35 @@ class CarouselScreen extends Component {
   }
 
   _sell = async () => {
-    Alert.alert("Sell artwork " + this.state.title)
+    this.setState({progress : true});
+
+    // Alert.alert("Sell artwork " + this.state.artHash);
+
+    const artHash = this.state.artHash;
+    let pictureURL = "https://image.shutterstock.com/image-vector/sample-stamp-grunge-texture-vector-600w-1389188336.jpg";
+    this.state.videos.map((picture) => {
+        if(picture.id === artHash){
+            pictureURL = picture.thumbnail;
+        }
+    });
+    axios.get(`http://blockarthdm.herokuapp.com/api/users/arthash/${artHash}`)
+    .then(response => {
+     //   const rec = response.data.response;
+    console.log(response.data.response);
+    console.log(response.data.response[0].username);
+
+    this.setState({progress : false });
+
+
+      
+    this.props.navigation.navigate('Trader', {transaction: this.props.navigation.getParam('transaction','NO-ID'), artHash : this.state.artHash, artwork : this.state.title, recipients: response.data.response, url: pictureURL});
+   })
+   .catch(err => {
+     console.log(err);
+     Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+     this.setState({progress : false });
+   });
+
   }
 
   _buy = async () => {
@@ -274,16 +300,16 @@ class CarouselScreen extends Component {
         );
 
       }
-      else {
-        artTradeArea = (
-          <TouchableOpacity
-            onPress={this._buy}
-            style={styles.buttonBuy}>
-            <Text style={styles.buttonText}>Kunstwerk kaufen</Text>
-          </TouchableOpacity>
-        );
+     // else {
+        // artTradeArea = (
+        //   <TouchableOpacity
+        //     onPress={this._buy}
+        //     style={styles.buttonBuy}>
+        //     <Text style={styles.buttonText}>Kunstwerk kaufen</Text>
+        //   </TouchableOpacity>
+        // );
 
-      }
+    //  }
     }
 
     return (

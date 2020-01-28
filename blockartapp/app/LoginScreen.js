@@ -61,46 +61,53 @@ export default class LoginScreen extends React.Component {
     let owners;
     let users;
 
-      axios.get('http://10.0.2.2:3000/api/ownership/').then(response => {
+      axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
        // console.log(response.data.response);
         owners = response.data.response;
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    
-      axios.get('http://10.0.2.2:3000/api/users/').then(response => {
+
+        axios.get('http://blockarthdm.herokuapp.com/api/users/').then(response => {
         // console.log(response.data.response);
         users = response.data.response;
+
+        this.authClient
+        .signIn({
+          username: this.state.userName,
+          password: this.state.password,
+        })
+        .then(function(transaction) {
+          self.setState({progress: false});
+  
+  
+          if (transaction.status === 'SUCCESS') {
+  
+            console.log(owners);
+            console.log(users);
+            const {navigate} = self.props.navigation;
+            navigate('Carousel', {transaction: transaction, users: users, owners: owners});
+          } else {
+            throw 'We cannot handle the ' + transaction.status + ' status';
+          }
+        })
+        .fail(function(err) {
+          Alert.alert("Der Login war nicht erfolgreich!");
+          console.error(err);
+          self.setState({progress: false});
+        });
+
       })
       .catch(err => {
         console.log(err);
-      });
-   
-    this.authClient
-      .signIn({
-        username: this.state.userName,
-        password: this.state.password,
-      })
-      .then(function(transaction) {
-        self.setState({progress: false});
-
-
-        if (transaction.status === 'SUCCESS') {
-
-          console.log(owners);
-          console.log(users);
-          const {navigate} = self.props.navigation;
-          navigate('Carousel', {transaction: transaction, users: users, owners: owners});
-        } else {
-          throw 'We cannot handle the ' + transaction.status + ' status';
-        }
-      })
-      .fail(function(err) {
-        Alert.alert("Der Login war nicht erfolgreich!");
-        console.error(err);
+        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
         self.setState({progress: false});
       });
+
+      })
+      .catch(err => {
+        console.log(err);
+        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+        self.setState({progress: false});
+      });
+    
   }
 
 
@@ -197,7 +204,6 @@ export default class LoginScreen extends React.Component {
                  testID="loginButton"
                  color="#004274"
                  onPress={async () => {
-                   this.state.progress = true;
                    this.login();
                  }}
                  title="Login"

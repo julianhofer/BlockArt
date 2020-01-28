@@ -15,6 +15,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 import LoginScreen from './app/LoginScreen.js';
 import ProfileScreen from './app/ProfileScreen.js';
 import CarouselScreen from './app/CarouselScreen.js';
+import Trader from './app/Trader.js';
 
 const MainNavigator = createStackNavigator({
   LoginScreen: {screen: LoginScreen, navigationOptions: {
@@ -28,6 +29,10 @@ const MainNavigator = createStackNavigator({
   Profile: {screen: ProfileScreen,navigationOptions: {
     header: null,
   } },
+  
+  Trader: {screen: Trader, navigationOptions: {
+    header: null,
+  }},
 
 
 });

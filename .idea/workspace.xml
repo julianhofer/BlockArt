@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="67f4faf4-4fb1-4e5f-88c7-d0bfeec154fe" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blockartapp/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blockartapp/app/CarouselScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/app/CarouselScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blockartapp/app/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/app/LoginScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blockartapp/app/ProfileScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/app/ProfileScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blockartapp/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blockartapp/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/package.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,8 +26,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane" />
     </panes>
   </component>
