@@ -69,7 +69,22 @@ export default class LoginScreen extends React.Component {
         // console.log(response.data.response);
         users = response.data.response;
 
-        this.authClient
+      })
+      .catch(err => {
+        console.log(err);
+        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+        self.setState({progress: false});
+      });
+
+      })
+      .catch(err => {
+        console.log(err);
+        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+        self.setState({progress: false});
+      });
+
+
+      this.authClient
         .signIn({
           username: this.state.userName,
           password: this.state.password,
@@ -80,8 +95,8 @@ export default class LoginScreen extends React.Component {
   
           if (transaction.status === 'SUCCESS') {
   
-            console.log(owners);
-            console.log(users);
+            // console.log(owners);
+            // console.log(users);
             const {navigate} = self.props.navigation;
             navigate('Carousel', {transaction: transaction, users: users, owners: owners});
           } else {
@@ -93,20 +108,6 @@ export default class LoginScreen extends React.Component {
           console.error(err);
           self.setState({progress: false});
         });
-
-      })
-      .catch(err => {
-        console.log(err);
-        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-        self.setState({progress: false});
-      });
-
-      })
-      .catch(err => {
-        console.log(err);
-        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-        self.setState({progress: false});
-      });
     
   }
 
