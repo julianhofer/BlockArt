@@ -52,15 +52,15 @@ class CarouselScreen extends Component {
       videos: [
         {
           id: "0x2b12a12e72407b459e7ea7277c90ffea17de1e68e63eb5cf95db93fd1cbca6a4",
-          thumbnail: "https://drive.google.com/uc?export=download&id=1nBSPuiXuibRon1j6cTR6Pu_GJ8jiB0Bp",
+          thumbnail: "https://drive.google.com/uc?export=download&id=1yr7jkWYcq6re4HMlEpjTyXbWaPNfvbbB",
           title: "Bild 001"
         }, {
           id: "0x80beafea96f0fa5ba688e37fef8eae0bbeb7ebdce652f46657bc43f52eaebc26",
-          thumbnail: "https://drive.google.com/uc?export=download&id=1xWSHmr2eIUXE_r_eGl9nG4x9abAl5J7a",
+          thumbnail: "https://drive.google.com/uc?export=download&id=1wR0rkmU9yIWQMZ6-EduV0XynYJU41cbY",
           title: "Bild 002"
         }, {
           id: "0xb26e61656485b5b9ce063b626c5d5c444e8eb0e449fa04ac02e3c81920811452",
-          thumbnail: "https://drive.google.com/uc?export=download&id=1Dfe5IYmSP7EDS3VbQNXpEUl25KNGURBF",
+          thumbnail: "https://drive.google.com/uc?export=download&id=1j6Wh_IPH-tA8kG1tlCzVHkiYgl0_LVor",
           title: "Bild 003"
         }
       ]
@@ -74,24 +74,26 @@ class CarouselScreen extends Component {
 
     if (index == 0) {
       this.setState({
-        title: "BlockCeption",
+        title: "Treeblock 001",
         artists: "Parco Macher",
         artHash: "0x2b12a12e72407b459e7ea7277c90ffea17de1e68e63eb5cf95db93fd1cbca6a4",
+        blockchain: "1",
       })
       this.getOwnerOf("0x2b12a12e72407b459e7ea7277c90ffea17de1e68e63eb5cf95db93fd1cbca6a4")
     } else if (index == 1) {
       this.setState({
-        title: "BlockCircle",
+        title: "Treeblock 002",
         artists: "Julian Hanser",
         artHash: "0x80beafea96f0fa5ba688e37fef8eae0bbeb7ebdce652f46657bc43f52eaebc26",
+        blockchain: "2",
       })
       this.getOwnerOf("0x80beafea96f0fa5ba688e37fef8eae0bbeb7ebdce652f46657bc43f52eaebc26")
     } else {
       this.setState({
-        title: "Blocks",
+        title: "Treeblock 003",
         artists: "Eberhardt Frick",
         artHash: "0xb26e61656485b5b9ce063b626c5d5c444e8eb0e449fa04ac02e3c81920811452",
-
+        blockchain: "3",
       })
       this.getOwnerOf("0xb26e61656485b5b9ce063b626c5d5c444e8eb0e449fa04ac02e3c81920811452")
     }

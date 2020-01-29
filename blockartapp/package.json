@@ -19,7 +19,7 @@
     "react-native-inappbrowser-reborn": "^3.3.4",
     "react-native-loading-spinner-overlay": "^1.0.1",
     "react-native-material-menu": "^1.0.0",
-    "react-native-nfc-manager": "^2.0.3",
+    "react-native-nfc-manager": "^2.1.0",
     "react-native-snap-carousel": "^3.8.4",
     "react-navigation": "^4.0.6",
     "react-navigation-stack": "^1.8.0",
