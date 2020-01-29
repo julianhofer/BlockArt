@@ -20,7 +20,7 @@ import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 
-export default class Trader extends React.Component {
+class Trader extends React.Component {
     static navigationOptions = {
         title: 'Trader',
 
@@ -37,12 +37,12 @@ export default class Trader extends React.Component {
 
 
       componentDidMount(){
-        const { navigation } = this.props;
-        const recipients = navigation.getParam('recipients', 'NO-ID');
+        // const { navigation } = this.props;
+        // const recipients = navigation.getParam('recipients', 'NO-ID');
 
-        this.setState = {
-            chosenRecipient : recipients[0].username,
-        }
+        // this.setState = {
+        //     chosenRecipient : recipients[0].username,
+        // }
 
       }
 
@@ -73,7 +73,7 @@ export default class Trader extends React.Component {
              owners = response.data.response;
 
              this.setState({progress : false });
-            navigate('Carousel', {transaction: transaction,  owners: owners});
+            navigate('Carousel', {owners: owners});
      
            })
            .catch(err => {
@@ -92,6 +92,10 @@ export default class Trader extends React.Component {
          this.setState({progress : false });
        });
     
+      }
+
+      changeText(itemValue){
+          this.setState({chosenRecipient : itemValue});
       }
 
 
@@ -146,7 +150,7 @@ export default class Trader extends React.Component {
                         <Picker
                             selectedValue = {this.state.chosenRecipient}
                             style={{ height: 50, width: 300, alignSelf: 'center' }}
-                            onValueChange={value => (this.state.chosenRecipient = value)}
+                            onValueChange={this.changeText.bind(this)}
                                
                             
                         >
@@ -203,3 +207,6 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     },
 })
+
+
+export default Trader;

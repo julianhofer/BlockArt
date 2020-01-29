@@ -28,7 +28,7 @@ const MainNavigator = createStackNavigator({
 
   Profile: {screen: ProfileScreen,navigationOptions: {
     header: null,
-  } },
+  }},
   
   Trader: {screen: Trader, navigationOptions: {
     header: null,
