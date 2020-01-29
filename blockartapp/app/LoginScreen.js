@@ -77,11 +77,7 @@ export default class LoginScreen extends React.Component {
       });
 
       })
-      .catch(err => {
-        console.log(err);
-        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-        self.setState({progress: false});
-      });
+    
 
 
       this.authClient
