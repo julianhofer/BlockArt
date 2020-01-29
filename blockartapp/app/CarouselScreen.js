@@ -318,7 +318,7 @@ class CarouselScreen extends Component {
 
         <Fragment>
           <SafeAreaView style={styles.container}>
-            <ScrollView keyboardShouldPersistTaps={true}>
+            <ScrollView keyboardShouldPersistTaps="always">
               <Spinner
                 visible={this.state.progress}
                 textContent={'Loading...'}
@@ -366,7 +366,7 @@ class CarouselScreen extends Component {
                   {/* <Text style={styles.infotext}>Preis: {this.state.price}</Text>
                 <Text style={styles.infotext}>Standort: {this.state.location}</Text> */}
                   <Text style={styles.infotext}>Eigentümer: {this.state.ownerName}</Text>
-                  <Text style={styles.infotext}>Position in Blockchain: {this.state.blockchain}</Text>
+                  {/* <Text style={styles.infotext}>Position in Blockchain: {this.state.blockchain}</Text> */}
                 </View>
               </ImageBackground>
             </ScrollView>
@@ -374,7 +374,7 @@ class CarouselScreen extends Component {
 
             <ImageBackground
               source={require('./components/background-flipped_cropped.jpg')}
-              imageStyle={{ opacity: 0.5 }}
+              imageStyle={{ opacity: 0.3 }}
               style={{
                 //height: '100%',
                 width: width,

@@ -48,7 +48,7 @@ class Trader extends React.Component {
     }
 
 
-    _sell = async () => {
+    _sell = () => {
         this.setState({ progress: true });
 
         const { navigation } = this.props;
@@ -58,31 +58,19 @@ class Trader extends React.Component {
 
         console.log("USER_TOKEN: " + userID + "ARTHASH: " + artHash + "BUYER: " + buyer);
 
-        let body = JSON.stringify({
-            artHash: artHash,
-            user_token: userID,
-            userName: buyer
+        axios({
+            method: 'post',
+            url: 'http://blockarthdm.herokuapp.com/api/ownership/newOwner',
+            timeout: 180000, // Wait at leat 180 seconds
+            data: {
+                artHash: artHash,
+                user_token: userID,
+                userName: buyer
+            }
         })
-
-        axios.post('http://blockarthdm.herokuapp.com/api/ownership/newOwner', body)
             .then(response => {
 
                 console.log(response.data.response);
-
-                axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
-                    // console.log(response.data.response);
-                    owners = response.data.response;
-
-                    this.setState({ progress: false });
-                    navigate('Carousel', { owners: owners });
-
-                })
-                    .catch(err => {
-                        console.log(err);
-                        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-                        self.setState({ progress: false });
-                    });
-
 
             })
             .catch(err => {
@@ -90,6 +78,53 @@ class Trader extends React.Component {
                 Alert.alert("Die Transaktion ist fehlgeschlagen");
                 this.setState({ progress: false });
             });
+
+        axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
+            // console.log(response.data.response);
+            const owners = response.data.response;
+
+            const { navigate } = self.props.navigation;
+            navigate('Carousel', { owners: owners });
+
+        })
+            .catch(err => {
+                console.log(err);
+                Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+                this.setState({ progress: false });
+            });
+
+        // let body = JSON.stringify({
+        //     artHash: artHash,
+        //     user_token: userID,
+        //     userName: buyer
+        // })
+
+        // axios.post('http://blockarthdm.herokuapp.com/api/ownership/newOwner', body)
+        //     .then(response => {
+
+        //         console.log(response.data.response);
+
+        //         axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
+        //             // console.log(response.data.response);
+        //             owners = response.data.response;
+
+        //             this.setState({ progress: false });
+        //             navigate('Carousel', { owners: owners });
+
+        //         })
+        //             .catch(err => {
+        //                 console.log(err);
+        //                 Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+        //                 self.setState({ progress: false });
+        //             });
+
+
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //         Alert.alert("Die Transaktion ist fehlgeschlagen");
+        //         this.setState({ progress: false });
+        //     });
 
     }
 
@@ -215,7 +250,7 @@ const styles = StyleSheet.create({
         flex: 1,
         position: 'absolute',
         left: 0,
-        top: height / 2,
+        top: height / 3,
         // opacity: 0.5,
         // backgroundColor: 'black',
         width: width
