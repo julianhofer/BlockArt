@@ -67,15 +67,7 @@ export default class LoginScreen extends React.Component {
       // console.log(response.data.response);
       owners = response.data.response;
 
-    })
-      .catch(err => {
-        console.log(err);
-        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-        self.setState({ progress: false });
-      });
-
-
-    axios.get('http://blockarthdm.herokuapp.com/api/users/').then(response => {
+      axios.get('http://blockarthdm.herokuapp.com/api/users/').then(response => {
       // console.log(response.data.response);
       users = response.data.response;
 
@@ -86,6 +78,12 @@ export default class LoginScreen extends React.Component {
         self.setState({ progress: false });
       });
 
+    })
+      .catch(err => {
+        console.log(err);
+        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+        self.setState({ progress: false });
+      });
 
 
     this.authClient
