@@ -15,6 +15,7 @@ import {
     Alert,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import BlockchainLoader from './components/BlockchainLoader';
 import axios from 'axios';
 
 
@@ -36,7 +37,7 @@ class Trader extends React.Component {
     }
 
 
-      componentDidMount(){
+    componentDidMount() {
         // const { navigation } = this.props;
         // const recipients = navigation.getParam('recipients', 'NO-ID');
 
@@ -44,59 +45,57 @@ class Trader extends React.Component {
         //     chosenRecipient : recipients[0].username,
         // }
 
-      }
+    }
 
 
     _sell = async () => {
-        this.setState({progress : true});
+        this.setState({ progress: true });
 
         const { navigation } = this.props;
         const userID = navigation.getParam('transaction', 'NO-ID').data._embedded.user.id;
         const artHash = navigation.getParam('artHash', 'NO-ID');
         const buyer = this.state.chosenRecipient;
 
-        console.log("USER_TOKEN: " + userID, + "ARTHASH: " + artHash, + "BUYER: " + buyer);
-      
-        axios.get('http://blockarthdm.herokuapp.com/api/ownership/newOwner', {
-            params: {
-              artHash: artHash,
-              user_token: userID,
-              userName: buyer,
-            }
-          })
-        .then(response => {
+        console.log("USER_TOKEN: " + userID + "ARTHASH: " + artHash + "BUYER: " + buyer);
 
-        console.log(response.data.response);
+        let body = JSON.stringify({
+            artHash: artHash,
+            user_token: userID,
+            userName: buyer
+        })
 
-        axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
-            // console.log(response.data.response);
-             owners = response.data.response;
+        axios.post('http://blockarthdm.herokuapp.com/api/ownership/newOwner', body)
+            .then(response => {
 
-             this.setState({progress : false });
-            navigate('Carousel', {owners: owners});
-     
-           })
-           .catch(err => {
-             console.log(err);
-             Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-             self.setState({progress: false});
-           });
-    
-     
+                console.log(response.data.response);
+
+                axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
+                    // console.log(response.data.response);
+                    owners = response.data.response;
+
+                    this.setState({ progress: false });
+                    navigate('Carousel', { owners: owners });
+
+                })
+                    .catch(err => {
+                        console.log(err);
+                        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+                        self.setState({ progress: false });
+                    });
 
 
-       })
-       .catch(err => {
-         console.log(err);
-         Alert.alert("Die Transaktion ist fehlgeschlagen");
-         this.setState({progress : false });
-       });
-    
-      }
+            })
+            .catch(err => {
+                console.log(err);
+                Alert.alert("Die Transaktion ist fehlgeschlagen");
+                this.setState({ progress: false });
+            });
 
-      changeText(itemValue){
-          this.setState({chosenRecipient : itemValue});
-      }
+    }
+
+    changeText(itemValue) {
+        this.setState({ chosenRecipient: itemValue });
+    }
 
 
 
@@ -111,16 +110,22 @@ class Trader extends React.Component {
         const artwork = navigation.getParam('artwork', 'NO-ID');
         const recipients = navigation.getParam('recipients', 'NO-ID');
 
+        let loader
+
+        if (this.state.progress) {
+            loader = (
+                <View style={styles.overlay}>
+                    <BlockchainLoader />
+                </View>
+            )
+        }
+
         return (
 
             <Fragment>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView style={styles.container}>
-                    <Spinner
-                        visible={this.state.progress}
-                        textContent={'Loading...'}
-                        textStyle={styles.spinnerTextStyle}
-                    />
+                    {loader}
                     <ImageBackground
                         source={require('./components/background.jpg')}
                         imageStyle={{ opacity: 0.5 }}
@@ -144,19 +149,19 @@ class Trader extends React.Component {
                                 height: "40%", margin: 20,
                                 alignSelf: 'center',
                             }}
-                            source={{uri: navigation.getParam('url')}}
+                            source={{ uri: navigation.getParam('url') }}
                         />
 
                         <Picker
-                            selectedValue = {this.state.chosenRecipient}
+                            selectedValue={this.state.chosenRecipient}
                             style={{ height: 50, width: 300, alignSelf: 'center' }}
                             onValueChange={this.changeText.bind(this)}
-                               
-                            
+
+
                         >
                             <Picker.Item label={recipients[0].username} value={recipients[0].username} />
-                            <Picker.Item label={recipients[1].username} value={recipients[1].username}/>
-                            <Picker.Item label={recipients[2].username} value={recipients[2].username} /> 
+                            <Picker.Item label={recipients[1].username} value={recipients[1].username} />
+                            <Picker.Item label={recipients[2].username} value={recipients[2].username} />
                         </Picker>
 
                         <TouchableOpacity
@@ -177,7 +182,7 @@ class Trader extends React.Component {
 const styles = StyleSheet.create({
     spinnerTextStyle: {
         color: '#FFF'
-      },
+    },
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -206,6 +211,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold"
     },
+    overlay: {
+        flex: 1,
+        position: 'absolute',
+        left: 0,
+        top: height / 2,
+        // opacity: 0.5,
+        // backgroundColor: 'black',
+        width: width
+    }
 })
 
 

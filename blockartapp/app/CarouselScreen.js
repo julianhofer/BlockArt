@@ -22,7 +22,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 
-
 const { width, height } = Dimensions.get('window');
 
 
@@ -44,7 +43,7 @@ class CarouselScreen extends Component {
 
     this._carousel = {};
     this.init();
-  
+
   }
 
 
@@ -68,7 +67,7 @@ class CarouselScreen extends Component {
     };
 
     console.log("ThumbnailCarousel Props: ", this.props);
-   
+
   }
 
   changeText(index) {
@@ -98,23 +97,23 @@ class CarouselScreen extends Component {
     }
   }
 
-  async getOwnerOf(artHash){
+  async getOwnerOf(artHash) {
     let owners = this.props.navigation.getParam('owners', null);
     owners.map((owner) => {
-        if(owner.artHash === artHash){
-          console.log(owner.artHash);
-          console.log(owner.user_token);
-          this.getOwnername(owner.user_token);
-        }
+      if (owner.artHash === artHash) {
+        console.log(owner.artHash);
+        console.log(owner.user_token);
+        this.getOwnername(owner.user_token);
+      }
     })
-    
+
   }
 
-  async getOwnername(user_token){
+  async getOwnername(user_token) {
     let users = this.props.navigation.getParam('users', null);
     users.map((user) => {
-      if(user.user_token === user_token){
-        this.setState({ownerName : user.username, owner: user.user_token});
+      if (user.user_token === user_token) {
+        this.setState({ ownerName: user.username, owner: user.user_token });
       }
     })
   }
@@ -173,7 +172,7 @@ class CarouselScreen extends Component {
 
   componentDidMount() {
 
-   
+
     this._carousel.snapToItem(1)
     this.changeText(1)
     NfcManager.start()
@@ -244,34 +243,34 @@ class CarouselScreen extends Component {
   }
 
   _sell = async () => {
-    this.setState({progress : true});
+    this.setState({ progress: true });
 
     // Alert.alert("Sell artwork " + this.state.artHash);
 
     const artHash = this.state.artHash;
     let pictureURL = "https://image.shutterstock.com/image-vector/sample-stamp-grunge-texture-vector-600w-1389188336.jpg";
     this.state.videos.map((picture) => {
-        if(picture.id === artHash){
-            pictureURL = picture.thumbnail;
-        }
+      if (picture.id === artHash) {
+        pictureURL = picture.thumbnail;
+      }
     });
     axios.get(`http://blockarthdm.herokuapp.com/api/users/arthash/${artHash}`)
-    .then(response => {
-     //   const rec = response.data.response;
-    console.log(response.data.response);
-    console.log(response.data.response[0].username);
+      .then(response => {
+        //   const rec = response.data.response;
+        console.log(response.data.response);
+        console.log(response.data.response[0].username);
 
-    this.setState({progress : false });
+        this.setState({ progress: false });
 
 
-      
-    this.props.navigation.navigate('Trader', {transaction: this.props.navigation.getParam('transaction','NO-ID'), artHash : this.state.artHash, artwork : this.state.title, recipients: response.data.response, url: pictureURL});
-   })
-   .catch(err => {
-     console.log(err);
-     Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-     this.setState({progress : false });
-   });
+
+        this.props.navigation.navigate('Trader', { transaction: this.props.navigation.getParam('transaction', 'NO-ID'), artHash: this.state.artHash, artwork: this.state.title, recipients: response.data.response, url: pictureURL });
+      })
+      .catch(err => {
+        console.log(err);
+        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+        this.setState({ progress: false });
+      });
 
   }
 
@@ -300,81 +299,88 @@ class CarouselScreen extends Component {
         );
 
       }
-     // else {
-        // artTradeArea = (
-        //   <TouchableOpacity
-        //     onPress={this._buy}
-        //     style={styles.buttonBuy}>
-        //     <Text style={styles.buttonText}>Kunstwerk kaufen</Text>
-        //   </TouchableOpacity>
-        // );
+      // else {
+      // artTradeArea = (
+      //   <TouchableOpacity
+      //     onPress={this._buy}
+      //     style={styles.buttonBuy}>
+      //     <Text style={styles.buttonText}>Kunstwerk kaufen</Text>
+      //   </TouchableOpacity>
+      // );
 
-    //  }
+      //  }
     }
 
     return (
-      <ScrollView keyboardShouldPersistTaps={true}>
+      <View style={{ flex: 1 }}>
+
         <Fragment>
           <SafeAreaView style={styles.container}>
-            <Spinner
-              visible={this.state.progress}
-              textContent={'Loading...'}
-              textStyle={styles.spinnerTextStyle}
-            />
+            <ScrollView keyboardShouldPersistTaps={true}>
+              <Spinner
+                visible={this.state.progress}
+                textContent={'Loading...'}
+                textStyle={styles.spinnerTextStyle}
+              />
 
-            <ImageBackground
-              source={require('./components/background.jpg')}
-              style={{
-                height: height,
-                width: width,
-                resizeMode: "cover",
-                overflow: "hidden",
-                flex: 1
-              }}>
+              <ImageBackground
+                source={require('./components/background.jpg')}
+                style={{
+                  height: height + 100,
+                  width: width,
+                  resizeMode: "cover",
+                  overflow: "hidden",
+                  flex: 1
+                }}>
 
-              <TouchableOpacity
-                onPress={this._profile} style={{ height: 50, width: 50, position: "relative", left: (width - 50), top: 5 }}
-              >
-                <Image source={require('./components/user_icon.png')} style={{ height: 50, width: 50, right: 10, top: 10 }} />
-              </TouchableOpacity>
-
-
-              <Text style={styles.heading}>BlockArt</Text>
+                <TouchableOpacity
+                  onPress={this._profile} style={{ height: 50, width: 50, position: "relative", left: (width - 50), top: 5 }}
+                >
+                  <Image source={require('./components/user_icon.png')} style={{ height: 50, width: 50, right: 10, top: 10 }} />
+                </TouchableOpacity>
 
 
-              <CarouselBackgroundView style={{ position: 'relative', top: 30, alignItems: 'center' }}>
-                <Carousel
-                  style={styles.Carousel}
-                  ref={(c) => { this._carousel = c; }}
-                  data={this.state.videos}
-                  renderItem={this._renderItem.bind(this)}
-                  onSnapToItem={this.handleSnapToItem.bind(this)}
-                  sliderWidth={400}
-                  itemWidth={256}
-                  layout={'default'}
-                  firstItem={1}
-                  containerCustomStyle={{ flexGrow: 0 }}
-                />
-              </CarouselBackgroundView>
+                <Text style={styles.heading}>BlockArt</Text>
 
-              <View style={styles.infos}>
-                <Text style={styles.infotext}>Bildtitel: {this.state.title}</Text>
-                {/* <Text style={styles.infotext}>Künstler: {this.state.artists}</Text> */}
-                {/* <Text style={styles.infotext}>Preis: {this.state.price}</Text>
+
+                <CarouselBackgroundView style={{ position: 'relative', top: 30, alignItems: 'center' }}>
+                  <Carousel
+                    style={styles.Carousel}
+                    ref={(c) => { this._carousel = c; }}
+                    data={this.state.videos}
+                    renderItem={this._renderItem.bind(this)}
+                    onSnapToItem={this.handleSnapToItem.bind(this)}
+                    sliderWidth={400}
+                    itemWidth={256}
+                    layout={'default'}
+                    firstItem={1}
+                    containerCustomStyle={{ flexGrow: 0 }}
+                  />
+                </CarouselBackgroundView>
+
+                <View style={styles.infos}>
+                  <Text style={styles.infotext}>Bildtitel: {this.state.title}</Text>
+                  {/* <Text style={styles.infotext}>Künstler: {this.state.artists}</Text> */}
+                  {/* <Text style={styles.infotext}>Preis: {this.state.price}</Text>
                 <Text style={styles.infotext}>Standort: {this.state.location}</Text> */}
-                <Text style={styles.infotext}>Eigentümer: {this.state.ownerName}</Text>
-                <Text style={styles.infotext}>Position in Blockchain: {this.state.blockchain}</Text>
-              </View>
-            </ImageBackground>
+                  <Text style={styles.infotext}>Eigentümer: {this.state.ownerName}</Text>
+                  <Text style={styles.infotext}>Position in Blockchain: {this.state.blockchain}</Text>
+                </View>
+              </ImageBackground>
+            </ScrollView>
+
+
             <ImageBackground
               source={require('./components/background-flipped_cropped.jpg')}
               imageStyle={{ opacity: 0.5 }}
               style={{
                 //height: '100%',
                 width: width,
-                resizeMode: "cover",
-                overflow: "hidden",
-                flex: 1
+                //resizeMode: "cover",
+                //overflow: "hidden",
+                flex: 1,
+                position: 'absolute',
+                bottom: 0,
               }}>
 
               <TouchableOpacity
@@ -393,7 +399,8 @@ class CarouselScreen extends Component {
 
           </SafeAreaView>
         </Fragment>
-      </ScrollView>
+
+      </View>
     )
   }
 }

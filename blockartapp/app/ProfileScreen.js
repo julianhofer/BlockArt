@@ -61,12 +61,12 @@ export default class ProfileScreen extends React.Component {
 
   async logout() {
     console.log("Logout clicked")
-    // const promise = await signOut();
-    this.setState({ authenticated: false  });
-      this.setState({ progress: false });
-      const { navigate } = this.props.navigation;
-      navigate('LoginScreen');
-    
+    const promise = await signOut();
+    // this.setState({ authenticated: false  });
+    //   this.setState({ progress: false });
+    //   const { navigate } = this.props.navigation;
+    //   navigate('LoginScreen');
+
   }
 
   async componentDidMount() {
@@ -82,9 +82,9 @@ export default class ProfileScreen extends React.Component {
       console.warn(e);
       self.setState({ progress: false });
     });
-    EventEmitter.addListener('signOutSuccess', function(e: Event){
+    EventEmitter.addListener('signOutSuccess', function (e: Event) {
       console.log("SignoutSuccess")
-      this.setState({ authenticated: false  });
+      this.setState({ authenticated: false });
       this.setState({ progress: false });
       const { navigate } = this.props.navigation;
       navigate('LoginScreen');
@@ -253,30 +253,29 @@ export default class ProfileScreen extends React.Component {
               {idtokenarea} */}
             {/* </ScrollView> */}
             <View style={styles.buttonContainer}>
-            <View style={styles.button}>
-            <View style={{ marginTop: 60, height: 40 }}>
-            <Button
-              testID="logoutButton"
-              color="#004274"
-              onPress={async () => {
-               // this.state.progress = true;
-                this.logout();
-              }}
-              title="Logout"
+              <View style={styles.button}>
+                <View style={{ marginTop: 60, height: 40 }}>
+                  <Button
+                    testID="logoutButton"
+                    color="#004274"
+                    onPress={async () => {
+                      this.logout();
+                    }}
+                    title="Logout"
 
-            />
-            </View>
-            <View style={{ marginTop: 60, height: 40 }}>
-            <Button
-            style={{marginTop: 20}}
-              testID="accountButton"
-              color="#004274"
-              onPress={() => { this.openLink() }}
-              title="Manage my account"
+                  />
+                </View>
+                <View style={{ marginTop: 60, height: 40 }}>
+                  <Button
+                    style={{ marginTop: 20 }}
+                    testID="accountButton"
+                    color="#004274"
+                    onPress={() => { this.openLink() }}
+                    title="Manage my account"
 
-            />
-            </View>
-            </View>
+                  />
+                </View>
+              </View>
             </View>
           </ImageBackground>
         </SafeAreaView>
