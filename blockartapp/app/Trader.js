@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import BlockchainLoader from './components/BlockchainLoader';
+import BlockchainLoaderExtended from './components/BlockchainLoaderExtended';
 import axios from 'axios';
 
 
@@ -31,6 +32,7 @@ class Trader extends React.Component {
         super(props);
         this.state = {
             progress: false,
+            extendedprogress: false,
             chosenRecipient: '',
         }
 
@@ -51,20 +53,20 @@ class Trader extends React.Component {
     _sell = () => {
         let self = this;
         this.setState({ progress: true });
-        
+
         const { navigation } = this.props;
         const userID = navigation.getParam('transaction', 'NO-ID').data._embedded.user.id;
         const artHash = navigation.getParam('artHash', 'NO-ID');
         let buyer;
-        if(this.state.chosenRecipient !== ''){
+        if (this.state.chosenRecipient !== '') {
             buyer = this.state.chosenRecipient;
         }
-        else{
+        else {
             const { navigation } = this.props;
-        const recipients = navigation.getParam('recipients', 'NO-ID');
+            const recipients = navigation.getParam('recipients', 'NO-ID');
             buyer = recipients[0].username;
         }
- 
+
 
         console.log("USER_TOKEN: " + userID + "ARTHASH: " + artHash + "BUYER: " + buyer);
 
@@ -88,6 +90,7 @@ class Trader extends React.Component {
                         // console.log(response.data.response);
                         const owners = response.data.response;
                         self.setState({ progress: false });
+                        Alert.alert("Transaktion erfolgreich. Neuer Besitzer: " + buyer);
                         const { navigate } = self.props.navigation;
                         navigate('Carousel', { owners: owners });
 
@@ -99,34 +102,37 @@ class Trader extends React.Component {
                         });
 
 
-                }, 3000);
+                }, 4000);
 
             })
             .catch(err => {
 
                 let self = this;
+                self.setState({ progress: false, extendedprogress: true });
 
                 console.log(err);
-                setTimeout(function () {
 
-                    axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
-                        // console.log(response.data.response);
+                axios({
+                    method: 'post',
+                    url: 'http://blockarthdm.herokuapp.com/api/ownership/newOwner/reload',
+                    data: {
+                        artHash: artHash,
+                    }
+                })
+                    .then(response => {
+                        console.log(response.data.response);
                         const owners = response.data.response;
-                        self.setState({ progress: false });
+                        self.setState({ extendedprogress: false });
                         const { navigate } = self.props.navigation;
                         navigate('Carousel', { owners: owners });
 
                     })
-                        .catch(err => {
-                            console.log(err);
-                            Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-                            self.setState({ progress: false });
-                        });
+                    .catch(err => {
+                        console.log(err);
+                        Alert.alert("Irgendetwas ist schiefgelaufen oder die Transaktion dauert länger als eine Minute.");
+                        self.setState({ extendedprogress: false });
+                    });
 
-
-                }, 10000);
-
-                //Alert.alert("Die Transaktion ist fehlgeschlagen");
             });
 
 
@@ -188,6 +194,13 @@ class Trader extends React.Component {
             loader = (
                 <View style={styles.overlay}>
                     <BlockchainLoader />
+                </View>
+            )
+        }
+        else if (this.state.extendedprogress) {
+            loader = (
+                <View style={styles.overlay}>
+                    <BlockchainLoaderExtended />
                 </View>
             )
         }
@@ -305,7 +318,14 @@ const styles = StyleSheet.create({
         // opacity: 0.5,
         // backgroundColor: 'black',
         width: width
-    }
+    },
+    infoText: {
+        fontSize: 15,
+        fontWeight: "bold",
+        paddingTop: 10,
+        textAlign: "center",
+        paddingBottom: 5,
+    },
 })
 
 

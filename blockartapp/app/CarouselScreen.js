@@ -42,6 +42,7 @@ class CarouselScreen extends Component {
       refreshing: false, 
       owners: [],
       users: [],
+      index : null,
 
     }
 
@@ -75,7 +76,7 @@ class CarouselScreen extends Component {
   }
 
   changeText(index) {
-
+    this.setState({index : index});
     if (index == 0) {
       this.setState({
         title: "Treeblock 001",
@@ -324,7 +325,7 @@ class CarouselScreen extends Component {
     });
   }
 
-  refreshData = async() => {
+  async refreshData () {
     let owners;
     let users;
     let self = this;
@@ -353,6 +354,8 @@ class CarouselScreen extends Component {
         Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
         self.setState({ progress: false });
       });
+
+    this.changeText(this.state.index);
 
 
 

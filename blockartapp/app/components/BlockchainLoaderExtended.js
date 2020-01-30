@@ -3,7 +3,7 @@ import {View, Image, Text, Dimensions} from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-class BlockchainLoader extends React.Component{
+class BlockchainLoaderExtended extends React.Component{
     render(){
         return(
             <View style={{flex:1}}>
@@ -11,7 +11,7 @@ class BlockchainLoader extends React.Component{
                  source={require('./blockchain_loader.gif')}
                  style={styles.img}
                  />
-                 <Text style={styles.infoText}>Info: Smart-Contract wird aktualisiert. Mining kann je nach Netzauslastung bis zu einer Minute dauern!</Text>
+                 <Text style={styles.infoText}>Die Transaktion dauert länger als gewöhnlich!</Text>
             </View>
         )
     }
@@ -33,4 +33,4 @@ const styles = {
       },
 }
 
-export default BlockchainLoader;
+export default BlockchainLoaderExtended;
