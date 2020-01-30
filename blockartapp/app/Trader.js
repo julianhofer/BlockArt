@@ -103,9 +103,30 @@ class Trader extends React.Component {
 
             })
             .catch(err => {
+
+                let self = this;
+
                 console.log(err);
+                setTimeout(function () {
+
+                    axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
+                        // console.log(response.data.response);
+                        const owners = response.data.response;
+                        self.setState({ progress: false });
+                        const { navigate } = self.props.navigation;
+                        navigate('Carousel', { owners: owners });
+
+                    })
+                        .catch(err => {
+                            console.log(err);
+                            Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+                            self.setState({ progress: false });
+                        });
+
+
+                }, 10000);
+
                 //Alert.alert("Die Transaktion ist fehlgeschlagen");
-                this.setState({ progress: false });
             });
 
 
