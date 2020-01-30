@@ -49,12 +49,22 @@ class Trader extends React.Component {
 
 
     _sell = () => {
+        let self = this;
         this.setState({ progress: true });
-
+        
         const { navigation } = this.props;
         const userID = navigation.getParam('transaction', 'NO-ID').data._embedded.user.id;
         const artHash = navigation.getParam('artHash', 'NO-ID');
-        const buyer = this.state.chosenRecipient;
+        let buyer;
+        if(this.state.chosenRecipient !== ''){
+            buyer = this.state.chosenRecipient;
+        }
+        else{
+            const { navigation } = this.props;
+        const recipients = navigation.getParam('recipients', 'NO-ID');
+            buyer = recipients[0].username;
+        }
+ 
 
         console.log("USER_TOKEN: " + userID + "ARTHASH: " + artHash + "BUYER: " + buyer);
 
@@ -65,7 +75,7 @@ class Trader extends React.Component {
             data: {
                 artHash: artHash,
                 user_token: userID,
-                userName: buyer
+                userName: buyer,
             }
         })
             .then(response => {
@@ -77,15 +87,15 @@ class Trader extends React.Component {
                     axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
                         // console.log(response.data.response);
                         const owners = response.data.response;
-                        this.setState({ progress: false });
-                        const { navigate } = this.props.navigation;
+                        self.setState({ progress: false });
+                        const { navigate } = self.props.navigation;
                         navigate('Carousel', { owners: owners });
 
                     })
                         .catch(err => {
                             console.log(err);
                             Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-                            this.setState({ progress: false });
+                            self.setState({ progress: false });
                         });
 
 
@@ -94,7 +104,7 @@ class Trader extends React.Component {
             })
             .catch(err => {
                 console.log(err);
-                Alert.alert("Die Transaktion ist fehlgeschlagen");
+                //Alert.alert("Die Transaktion ist fehlgeschlagen");
                 this.setState({ progress: false });
             });
 
@@ -165,7 +175,7 @@ class Trader extends React.Component {
                 <View>
                     <Image
                         style={{
-                            width: "40%",
+                            width: "60%",
                             height: "60%", margin: 20,
                             alignSelf: 'center',
                         }}

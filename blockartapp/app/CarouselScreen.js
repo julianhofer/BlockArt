@@ -12,6 +12,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   Button,
+  RefreshControl,
 } from 'react-native';
 import axios from 'axios';
 
@@ -38,6 +39,9 @@ class CarouselScreen extends Component {
       ownerName: "",
       artHash: null,
       progress: false,
+      refreshing: false, 
+      owners: [],
+      users: [],
 
     }
 
@@ -100,7 +104,18 @@ class CarouselScreen extends Component {
   }
 
   async getOwnerOf(artHash) {
-    if(this.props.navigation.getParam('owners') !== undefined){
+    console.log(this.state.owners);
+    if(this.state.owners !== undefined){
+      
+      this.state.owners.map((owner) => {
+        if (owner.artHash === artHash) {
+          console.log(owner.artHash);
+          console.log(owner.user_token);
+          this.getOwnername(owner.user_token);
+        }
+      })
+    }
+    else if(this.props.navigation.getParam('owners') !== undefined){
       let owners = this.props.navigation.getParam('owners', null);
     owners.map((owner) => {
       if (owner.artHash === artHash) {
@@ -115,7 +130,15 @@ class CarouselScreen extends Component {
   }
 
   async getOwnername(user_token) {
-    if(this.props.navigation.getParam('users') !== undefined){
+    console.log(this.state.users);
+    if(this.state.users !== undefined){
+      this.state.users.map((user) => {
+        if (user.user_token === user_token) {
+          this.setState({ ownerName: user.username, owner: user.user_token });
+        }
+      })
+    }
+    else if(this.props.navigation.getParam('users') !== undefined){
     let users = this.props.navigation.getParam('users', null);
     users.map((user) => {
       if (user.user_token === user_token) {
@@ -294,6 +317,48 @@ class CarouselScreen extends Component {
    
   }
 
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    this.refreshData().then(() => {
+      this.setState({refreshing: false});
+    });
+  }
+
+  refreshData = async() => {
+    let owners;
+    let users;
+    let self = this;
+
+    axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
+       console.log(response.data.response);
+
+      self.setState({owners: response.data.response});
+
+      axios.get('http://blockarthdm.herokuapp.com/api/users/').then(response => {
+       console.log(response.data.response);
+
+      self.setState({users: response.data.response});
+
+
+    })
+      .catch(err => {
+        console.log(err);
+        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+        self.setState({ progress: false });
+      });
+
+    })
+      .catch(err => {
+        console.log(err);
+        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+        self.setState({ progress: false });
+      });
+
+
+
+
+  }
+
 
   render() {
     let artTradeArea;
@@ -326,7 +391,13 @@ class CarouselScreen extends Component {
 
         <Fragment>
           <SafeAreaView style={styles.container}>
-            <ScrollView keyboardShouldPersistTaps="always">
+            <ScrollView keyboardShouldPersistTaps="always"
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }>
               <Spinner
                 visible={this.state.progress}
                 textContent={'Loading...'}
