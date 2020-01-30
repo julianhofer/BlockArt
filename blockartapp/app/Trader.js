@@ -72,24 +72,24 @@ class Trader extends React.Component {
 
                 console.log(response.data.response);
 
-                setTimeout(function(){
+                setTimeout(function () {
 
                     axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
-            // console.log(response.data.response);
-            const owners = response.data.response;
-                this.setState({progress: false});
-            const { navigate } = this.props.navigation;
-            navigate('Carousel', { owners: owners });
+                        // console.log(response.data.response);
+                        const owners = response.data.response;
+                        this.setState({ progress: false });
+                        const { navigate } = this.props.navigation;
+                        navigate('Carousel', { owners: owners });
 
-        })
-            .catch(err => {
-                console.log(err);
-                Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-                this.setState({ progress: false });
-            });
+                    })
+                        .catch(err => {
+                            console.log(err);
+                            Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+                            this.setState({ progress: false });
+                        });
 
-    
-                },3000);
+
+                }, 3000);
 
             })
             .catch(err => {
@@ -99,11 +99,11 @@ class Trader extends React.Component {
             });
 
 
-            // let body = JSON.stringify({
-            //     artHash: artHash,
-            //     user_token: userID,
-            //     userName: buyer
-            // })
+        // let body = JSON.stringify({
+        //     artHash: artHash,
+        //     user_token: userID,
+        //     userName: buyer
+        // })
 
         // axios.post('http://blockarthdm.herokuapp.com/api/ownership/newOwner', body)
         //     .then(response => {
@@ -160,13 +160,49 @@ class Trader extends React.Component {
                 </View>
             )
         }
+        else {
+            loader = (
+                <View>
+                    <Image
+                        style={{
+                            width: "40%",
+                            height: "60%", margin: 20,
+                            alignSelf: 'center',
+                        }}
+                        source={{ uri: navigation.getParam('url') }}
+                    />
+
+                    <Picker
+                        selectedValue={this.state.chosenRecipient}
+                        style={{ height: 50, width: 300, alignSelf: 'center' }}
+                        onValueChange={this.changeText.bind(this)}
+                        itemStyle={{ backgroundColor: "white", fontSize: 20 }}
+
+                    >
+                        <Picker.Item label={recipients[0].username} value={recipients[0].username} color="#004274" fontSize="20" />
+                        <Picker.Item label={recipients[1].username} value={recipients[1].username} color="#004274" fontSize="20" />
+                        <Picker.Item label={recipients[2].username} value={recipients[2].username} color="#004274" fontSize="20" />
+                    </Picker>
+
+                    <TouchableOpacity
+                        onPress={this._sell}
+                        style={styles.buttonSell}>
+                        <Text style={styles.buttonText}>Kunstwerk verkaufen!</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+
+
+            )
+        }
 
         return (
 
             <Fragment>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView style={styles.container}>
-                    {loader}
+
                     <ImageBackground
                         source={require('./components/background.jpg')}
                         imageStyle={{ opacity: 0.5 }}
@@ -184,32 +220,10 @@ class Trader extends React.Component {
                         <Text style={styles.titleHello}>
                             Trading artwork {artwork}
                         </Text>
-                        <Image
-                            style={{
-                                width: "40%",
-                                height: "40%", margin: 20,
-                                alignSelf: 'center',
-                            }}
-                            source={{ uri: navigation.getParam('url') }}
-                        />
 
-                        <Picker
-                            selectedValue={this.state.chosenRecipient}
-                            style={{ height: 50, width: 300, alignSelf: 'center' }}
-                            onValueChange={this.changeText.bind(this)}
-                            itemStyle={{backgroundColor: "white", fontSize: 20}}
+                        {loader}
 
-                        >
-                            <Picker.Item label={recipients[0].username} value={recipients[0].username } color="#004274" fontSize="20"/>
-                            <Picker.Item label={recipients[1].username} value={recipients[1].username} color="#004274" fontSize="20"/>
-                            <Picker.Item label={recipients[2].username} value={recipients[2].username} color="#004274" fontSize="20"/>
-                        </Picker>
 
-                        <TouchableOpacity
-                            onPress={this._sell}
-                            style={styles.buttonSell}>
-                            <Text style={styles.buttonText}>Kunstwerk verkaufen!</Text>
-                        </TouchableOpacity>
 
                     </ImageBackground>
                 </SafeAreaView>
