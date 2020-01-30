@@ -71,6 +71,7 @@ export default class LoginScreen extends React.Component {
       // console.log(response.data.response);
       users = response.data.response;
 
+
     })
       .catch(err => {
         console.log(err);
@@ -100,7 +101,7 @@ export default class LoginScreen extends React.Component {
           // console.log(owners);
           // console.log(users);
           const { navigate } = self.props.navigation;
-          navigate('Carousel', { transaction: transaction, users: users, owners: owners });
+          navigate('Carousel', { transaction: transaction, users: users, owners: owners, auth: self.authClient });
         } else {
           throw 'We cannot handle the ' + transaction.status + ' status';
         }

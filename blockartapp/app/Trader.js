@@ -72,18 +72,13 @@ class Trader extends React.Component {
 
                 console.log(response.data.response);
 
-            })
-            .catch(err => {
-                console.log(err);
-                Alert.alert("Die Transaktion ist fehlgeschlagen");
-                this.setState({ progress: false });
-            });
+                setTimeout(function(){
 
-        axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
+                    axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
             // console.log(response.data.response);
             const owners = response.data.response;
-
-            const { navigate } = self.props.navigation;
+                this.setState({progress: false});
+            const { navigate } = this.props.navigation;
             navigate('Carousel', { owners: owners });
 
         })
@@ -93,11 +88,22 @@ class Trader extends React.Component {
                 this.setState({ progress: false });
             });
 
-        // let body = JSON.stringify({
-        //     artHash: artHash,
-        //     user_token: userID,
-        //     userName: buyer
-        // })
+    
+                },3000);
+
+            })
+            .catch(err => {
+                console.log(err);
+                Alert.alert("Die Transaktion ist fehlgeschlagen");
+                this.setState({ progress: false });
+            });
+
+
+            // let body = JSON.stringify({
+            //     artHash: artHash,
+            //     user_token: userID,
+            //     userName: buyer
+            // })
 
         // axios.post('http://blockarthdm.herokuapp.com/api/ownership/newOwner', body)
         //     .then(response => {
@@ -191,12 +197,12 @@ class Trader extends React.Component {
                             selectedValue={this.state.chosenRecipient}
                             style={{ height: 50, width: 300, alignSelf: 'center' }}
                             onValueChange={this.changeText.bind(this)}
-
+                            itemStyle={{backgroundColor: "white", fontSize: 20}}
 
                         >
-                            <Picker.Item label={recipients[0].username} value={recipients[0].username} />
-                            <Picker.Item label={recipients[1].username} value={recipients[1].username} />
-                            <Picker.Item label={recipients[2].username} value={recipients[2].username} />
+                            <Picker.Item label={recipients[0].username} value={recipients[0].username } color="#004274" fontSize="20"/>
+                            <Picker.Item label={recipients[1].username} value={recipients[1].username} color="#004274" fontSize="20"/>
+                            <Picker.Item label={recipients[2].username} value={recipients[2].username} color="#004274" fontSize="20"/>
                         </Picker>
 
                         <TouchableOpacity

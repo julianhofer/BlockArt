@@ -60,12 +60,26 @@ export default class ProfileScreen extends React.Component {
   }
 
   async logout() {
-    console.log("Logout clicked")
-    const promise = await signOut();
-    // this.setState({ authenticated: false  });
-    //   this.setState({ progress: false });
-    //   const { navigate } = this.props.navigation;
-    //   navigate('LoginScreen');
+    // this.setState({progress : true});
+    // let self = this;
+    // console.log("Logout clicked")
+    // this.props.navigation.getParam('auth').signOut()
+    // .then(function () {
+    //   self.setState({ progress: false });
+
+    //     const { navigate } = self.props.navigation;
+    //     navigate('Carousel', { transaction: transaction, users: users, owners: owners });
+    // })
+    // .fail(function (err) {
+    //   Alert.alert("Der Logout war nicht erfolgreich!");
+    //   console.error(err);
+    //   self.setState({ progress: false });
+    // });
+   
+    this.setState({ authenticated: false  });
+      this.setState({ progress: false });
+      const { navigate } = this.props.navigation;
+      navigate('LoginScreen');
 
   }
 
@@ -98,6 +112,8 @@ export default class ProfileScreen extends React.Component {
       requireHardwareBackedKeyStore:
         configFile.oidc.requireHardwareBackedKeyStore,
     });
+
+    console.log("Props: ", this.props);
   }
 
   componentWillUnmount() {
@@ -112,6 +128,7 @@ export default class ProfileScreen extends React.Component {
     this.setState({ accessToken: promise.access_token });
     this.setState({ authenticated: true });
     this.setState({ progress: false });
+    console.log(promise.access_token);
   }
 
   async getUserIdToken() {
@@ -127,6 +144,14 @@ export default class ProfileScreen extends React.Component {
 
 
   async openLink() {
+    const { navigation } = this.props;
+    const transaction = navigation.getParam('transaction', 'NO-ID');
+    this.exchangeSessionToken({
+      sessionToken: transaction.sessionToken,
+    });
+
+   
+
     try {
       const url = 'https://dev-665917.okta.com/'
       if (await InAppBrowser.isAvailable()) {

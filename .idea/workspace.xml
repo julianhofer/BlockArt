@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="67f4faf4-4fb1-4e5f-88c7-d0bfeec154fe" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/blockartapp/app/CarouselScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/app/CarouselScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blockartapp/app/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/app/LoginScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blockartapp/app/ProfileScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/app/ProfileScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blockartapp/app/Trader.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/app/Trader.js" afterDir="false" />
     </list>
@@ -10,6 +12,10 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="testRunner" value="GRADLE" />
+    <option name="delegatedBuild" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -25,9 +31,30 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
       <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="BlockArt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BlockArt" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="BlockArt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BlockArt" type="462c0819:PsiDirectoryNode" />
+              <item name="blockartapp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="BlockArt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BlockArt" type="462c0819:PsiDirectoryNode" />
+              <item name="blockartapp" type="462c0819:PsiDirectoryNode" />
+              <item name="android" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="RunDashboard">

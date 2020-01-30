@@ -17,7 +17,7 @@ import axios from 'axios';
 
 import NfcManager, { NfcEvents, Ndef } from 'react-native-nfc-manager';
 import Carousel from 'react-native-snap-carousel';
-import styled from "styled-components"; // 3.1.6
+import styled, { css } from "styled-components"; // 3.1.6
 import { ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -100,7 +100,8 @@ class CarouselScreen extends Component {
   }
 
   async getOwnerOf(artHash) {
-    let owners = this.props.navigation.getParam('owners', null);
+    if(this.props.navigation.getParam('owners') !== undefined){
+      let owners = this.props.navigation.getParam('owners', null);
     owners.map((owner) => {
       if (owner.artHash === artHash) {
         console.log(owner.artHash);
@@ -108,16 +109,20 @@ class CarouselScreen extends Component {
         this.getOwnername(owner.user_token);
       }
     })
+    }
+    
 
   }
 
   async getOwnername(user_token) {
+    if(this.props.navigation.getParam('users') !== undefined){
     let users = this.props.navigation.getParam('users', null);
     users.map((user) => {
       if (user.user_token === user_token) {
         this.setState({ ownerName: user.username, owner: user.user_token });
       }
     })
+  }
   }
 
 
@@ -282,8 +287,11 @@ class CarouselScreen extends Component {
 
 
   _profile = async () => {
-
-    this.props.navigation.navigate('Profile', { transaction: this.props.navigation.getParam('transaction', 'NO-ID') });
+   
+   
+      this.props.navigation.navigate('Profile', { transaction: this.props.navigation.getParam('transaction', 'NO-ID'), auth: this.props.navigation.getParam('auth', 'NO-ID') });
+   
+   
   }
 
 
