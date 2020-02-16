@@ -3,6 +3,10 @@ import React, { Component } from 'react';
 import styled from "styled-components/native"; // 3.1.6
 import Carousel from 'react-native-snap-carousel';
 
+/* Dies ist eine erste Beispielversion des Bilder-Karusells, das für die Anzeige der Bilder im Hauptfenster CarouselScreen 
+verwendet wird. Die grundlegende Funktionalität hiervon wird im CarouselScreen erweitert.
+Diese Klasse dient lediglich der Orientierung an die Funktionen, die zum Carousel gehören. */
+
 export default class MyCarousel extends Component {
 
   constructor(props){
@@ -16,7 +20,6 @@ export default class MyCarousel extends Component {
   }
 
   
-
   init(){
     this.state = {
       videos: [

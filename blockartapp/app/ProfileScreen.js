@@ -75,11 +75,11 @@ export default class ProfileScreen extends React.Component {
     //   console.error(err);
     //   self.setState({ progress: false });
     // });
-   
-    this.setState({ authenticated: false  });
-      this.setState({ progress: false });
-      const { navigate } = this.props.navigation;
-      navigate('LoginScreen');
+
+    this.setState({ authenticated: false });
+    this.setState({ progress: false });
+    const { navigate } = this.props.navigation;
+    navigate('LoginScreen');
 
   }
 
@@ -150,7 +150,7 @@ export default class ProfileScreen extends React.Component {
       sessionToken: transaction.sessionToken,
     });
 
-   
+
 
     try {
       const url = 'https://dev-665917.okta.com/'

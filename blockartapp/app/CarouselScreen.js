@@ -39,10 +39,10 @@ class CarouselScreen extends Component {
       ownerName: "",
       artHash: null,
       progress: false,
-      refreshing: false, 
+      refreshing: false,
       owners: [],
       users: [],
-      index : null,
+      index: null,
 
     }
 
@@ -76,7 +76,7 @@ class CarouselScreen extends Component {
   }
 
   changeText(index) {
-    this.setState({index : index});
+    this.setState({ index: index });
     if (index == 0) {
       this.setState({
         title: "Treeblock 001",
@@ -106,8 +106,8 @@ class CarouselScreen extends Component {
 
   async getOwnerOf(artHash) {
     console.log(this.state.owners);
-    if(this.state.owners !== undefined){
-      
+    if (this.state.owners !== undefined) {
+
       this.state.owners.map((owner) => {
         if (owner.artHash === artHash) {
           console.log(owner.artHash);
@@ -116,37 +116,37 @@ class CarouselScreen extends Component {
         }
       })
     }
-    else if(this.props.navigation.getParam('owners') !== undefined){
+    else if (this.props.navigation.getParam('owners') !== undefined) {
       let owners = this.props.navigation.getParam('owners', null);
-    owners.map((owner) => {
-      if (owner.artHash === artHash) {
-        console.log(owner.artHash);
-        console.log(owner.user_token);
-        this.getOwnername(owner.user_token);
-      }
-    })
+      owners.map((owner) => {
+        if (owner.artHash === artHash) {
+          console.log(owner.artHash);
+          console.log(owner.user_token);
+          this.getOwnername(owner.user_token);
+        }
+      })
     }
-    
+
 
   }
 
   async getOwnername(user_token) {
     console.log(this.state.users);
-    if(this.state.users !== undefined){
+    if (this.state.users !== undefined) {
       this.state.users.map((user) => {
         if (user.user_token === user_token) {
           this.setState({ ownerName: user.username, owner: user.user_token });
         }
       })
     }
-    else if(this.props.navigation.getParam('users') !== undefined){
-    let users = this.props.navigation.getParam('users', null);
-    users.map((user) => {
-      if (user.user_token === user_token) {
-        this.setState({ ownerName: user.username, owner: user.user_token });
-      }
-    })
-  }
+    else if (this.props.navigation.getParam('users') !== undefined) {
+      let users = this.props.navigation.getParam('users', null);
+      users.map((user) => {
+        if (user.user_token === user_token) {
+          this.setState({ ownerName: user.username, owner: user.user_token });
+        }
+      })
+    }
   }
 
 
@@ -311,42 +311,42 @@ class CarouselScreen extends Component {
 
 
   _profile = async () => {
-   
-   
-      this.props.navigation.navigate('Profile', { transaction: this.props.navigation.getParam('transaction', 'NO-ID'), auth: this.props.navigation.getParam('auth', 'NO-ID') });
-   
-   
+
+
+    this.props.navigation.navigate('Profile', { transaction: this.props.navigation.getParam('transaction', 'NO-ID'), auth: this.props.navigation.getParam('auth', 'NO-ID') });
+
+
   }
 
   _onRefresh = () => {
-    this.setState({refreshing: true});
+    this.setState({ refreshing: true });
     this.refreshData().then(() => {
-      this.setState({refreshing: false});
+      this.setState({ refreshing: false });
     });
   }
 
-  async refreshData () {
+  async refreshData() {
     let owners;
     let users;
     let self = this;
 
     axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
-       console.log(response.data.response);
+      console.log(response.data.response);
 
-      self.setState({owners: response.data.response});
+      self.setState({ owners: response.data.response });
 
       axios.get('http://blockarthdm.herokuapp.com/api/users/').then(response => {
-       console.log(response.data.response);
+        console.log(response.data.response);
 
-      self.setState({users: response.data.response});
+        self.setState({ users: response.data.response });
 
 
-    })
-      .catch(err => {
-        console.log(err);
-        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-        self.setState({ progress: false });
-      });
+      })
+        .catch(err => {
+          console.log(err);
+          Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+          self.setState({ progress: false });
+        });
 
     })
       .catch(err => {
@@ -395,12 +395,12 @@ class CarouselScreen extends Component {
         <Fragment>
           <SafeAreaView style={styles.container}>
             <ScrollView keyboardShouldPersistTaps="always"
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this._onRefresh}
-              />
-            }>
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this._onRefresh}
+                />
+              }>
               <Spinner
                 visible={this.state.progress}
                 textContent={'Loading...'}
