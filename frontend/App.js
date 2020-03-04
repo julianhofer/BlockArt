@@ -1,3 +1,15 @@
+/**
+ * Die Klasse <code>App.js</code> ist eine Klasse die verschiedene Methoden
+ * und Widgets zur Erstellung des Frontends bereitstellt.
+ * 
+ * @author VincentWengert, TobiasMoser, MarcoPracher
+ * @version 1.0
+ */
+
+
+/**
+	 * Importieren der nötigen Bibliotheken
+	 */
 import React, { Component } from 'react';
 import {
     SafeAreaView,
@@ -19,6 +31,9 @@ import styled from "styled-components"; // 3.1.6
 const {width, height} = Dimensions.get('window');
 
 
+/**
+	 * Bei der Instanziierung der <code>App.js</code> werden die nötigen Methoden hinzugefügt.
+	 */
 class App extends Component {
     constructor(props){
         super(props);
@@ -35,6 +50,9 @@ this.state = {
     }
 
 
+    /**
+	 * Initialisierungen der Bilder
+	 */
   init(){
     this.state = {
       videos: [
@@ -53,10 +71,11 @@ this.state = {
         }
       ]
     };
-
-    console.log("ThumbnailCarousel Props: ", this.props)
   }
 
+  /**
+	 * Initialisierungen der Texte der Bilder anhand der Position
+	 */
   changeText(index){
     if (index==0){
       this.setState({
@@ -76,6 +95,9 @@ this.state = {
     }
   }
 
+	/**
+	 * In dieser Methode wird die Navigation der Bilder realisiert
+	 */
   get pagination () {
     const { entries, activeSlide } = this.state;
     return (
@@ -99,6 +121,9 @@ this.state = {
     );
 }
 
+	/**
+	 * In dieser Methode werden die einzelnen Bilder gerendert
+	 */
 _renderItem = ( {item, index} ) => {
     console.log("rendering,", index, item)
     return (
@@ -124,10 +149,18 @@ _renderItem = ( {item, index} ) => {
     );
   }
 
-handleSnapToItem(index){
-  this.changeText(index)
-  }
-   
+  	/**
+	 * In dieser Methode wird das Wechseln zu den anderen Bildern behandelt
+	 */
+    handleSnapToItem(index){
+      this.changeText(index)
+      }
+
+   	/**
+	 * Das heißt, nachdem das HTML aus dem Renderer fertig geladen ist.
+   * Es wird einmal im Komponentenlebenszyklus aufgerufen und signalisiert, 
+   * dass die Komponente und alle ihre Unterkomponenten ordnungsgemäß gerendert wurden.
+	 */
     componentDidMount() {
         this._carousel.snapToItem(1)
         this.changeText(1)
@@ -136,25 +169,29 @@ handleSnapToItem(index){
             
                 let parsed = null;
                 if (tag.ndefMessage && tag.ndefMessage.length > 0) {
-                    // ndefMessage is actually an array of NdefRecords, 
-                    // and we can iterate through each NdefRecord, decode its payload 
-                    // according to its TNF & type
+                    /* ndefMessage ist eigentlich ein Array von NdefRecords, 
+                    und wir können durch jeden NdefRecord iterieren, seine Nutzlast entschlüsseln 
+                    entsprechend seiner TNF & Art */
                     const ndefRecords = tag.ndefMessage;
-            
+
+                     // Decodieren der Einträge
                     function decodeNdefRecord(record) {
                         if (Ndef.isType(record, Ndef.TNF_WELL_KNOWN, Ndef.RTD_TEXT)) {
                             return Ndef.text.decodePayload(record.payload);
                         } else if (Ndef.isType(record, Ndef.TNF_WELL_KNOWN, Ndef.RTD_URI)) {
                             return Ndef.uri.decodePayload(record.payload);
                         }
-            
                         return ['unknown', '---']
                     }
 
                     parsed = ndefRecords.map(decodeNdefRecord);
 
+                    //Ergebniss splitten
                     var infoText = String(parsed).split(',').join(' ') 
 
+                    /**
+	                  * Setzen der Texte der Bilder anhand der Position
+	                   */
                     this.setState({
                       title: infoText.substring(infoText.search("TITLE") + 9, infoText.indexOf(";", infoText.search("TITLE") + 9)),
                       artists: infoText.substring(infoText.search("ARTIST") + 7, infoText.indexOf(";", infoText.search("ARTIST") + 7)),
@@ -164,6 +201,9 @@ handleSnapToItem(index){
                       blockchain: infoText.substring(infoText.search("BLOCKCHAIN") + 11, infoText.indexOf(";", infoText.search("BLOCKCHAIN") + 11))
                     })        
 
+                  /**
+                   * Wechseln zum gescannten Kunstwerk
+                   */
                     if (String(parsed).substring(0,1) == "1"){
                       this._carousel.snapToItem(0);
                   }else if (String(parsed).substring(0,1) == "2"){
@@ -172,15 +212,22 @@ handleSnapToItem(index){
                       this._carousel.snapToItem(2);
                   }
                 }
-            
           NfcManager.setAlertMessageIOS('Kunstwerk gefunden!');
           NfcManager.unregisterTagEvent().catch(() => 0);
         });
       }
+
+      /**
+	     * Zugehörige Methode zu @see componentDidMount
+	    */
       componentWillUnmount() {
         NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
         NfcManager.unregisterTagEvent().catch(() => 0);
       }
+
+      /**
+       * Abbrechen des NFC Lesevorgangs
+       */
       _cancel = () => {
         NfcManager.unregisterTagEvent().catch(() => 0);
       }
@@ -194,9 +241,10 @@ handleSnapToItem(index){
         }
       }
 
-
-
-    
+/**
+   * Die Render-Methode gibt an was genau auf der Benutzeroberfläche der Anwendung angezeigt wird. 
+   * Sie definiert das Layout, den Inhalt, Bilder usw. Alles, was man auf der UI sieht, wird von den Komponenten gerendert.
+   */
 render(){
         return (
           <ImageBackground
@@ -242,6 +290,11 @@ render(){
         )
     }
 }
+
+
+ /**
+   * Styling
+	*/
 const styles = StyleSheet.create({
     container: {
         flex: 1,
