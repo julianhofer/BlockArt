@@ -20,3 +20,8 @@ Innerhalb der App wird die Okta-API zur Authentifizierung verwendet (siehe Login
 
 
 Die App stellt das Frontend für die Blockchain-Funktionalitäten dar. Sie tätigt lediglich API-Aufrufe zum Backend https://github.com/julianhofer/BlockArt-backend
+
+
+
+
+Die App befindet sich im blockartapp-Ordner. Der frontend-Ordner beinhaltet die Vorgängerversion, ist aber nur noch aus Backup-Gründen vorhanden und hinfällig.
