@@ -5,6 +5,13 @@ Für die Installation der Entwicklungsumgebung siehe https://codeburst.io/settin
 
 
 
+Nach dem Klonen des Projektes muss der Befehl `npm install` ausgeführt werden, um alle notwendigen Dependencies zu installieren. Dabei wird installiert:
+- Okta (Authentifizierung)
+- Axios (Vereinfachte API-Aufrufe)
+- NFC-Manager
+- In-App-Browser
+- Carousel (Für die Anzeige der Kunstwerke)
+
 Um die App auf einem Android Emulator oder angeschlossenem Android Gerät zu starten, wird der Befehl `react-native run-android` verwendet.
 
 
