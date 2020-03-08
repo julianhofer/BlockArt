@@ -1,13 +1,12 @@
 ﻿/*
- * Copyright (c) 2019, Okta, Inc. and/or its affiliates. All rights reserved.
- * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
- *
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *
- * See the License for the specific language governing permissions and limitations under the License.
+Dieser Screen wird beim Starten der App geöffnet und beinhaltet die Login-Funktion.
+Für den Login wird der OAuth-2.0 Dienst Okta verwendet (siehe https://www.okta.com/), da dieser kostenlos einfachste Authentifizierungs-Dienste
+für viele Programmiersprachen zur Verfügung stellt und zudem per API-Calls verwendet werden kann.
+Für Okta kann man online eine Applikation erstellen, die dann eine Authentifizierungs-Plattform darstellt. Diese hat ein entsprechendes
+Dashboard, auf dem man einfach Nutzer der Applikation hinzufügen kann, löschen kann und diese verwalten kann. Nutzer können sich bei ensprechender
+Konfiguration der Applikation auch selbst registrieren und ihr Benutzerkonto verwalten.
+
+Die Okta-Konfiguration befindet sich im File 'samples.config.js'
  */
 
 import React, { Fragment } from 'react';
@@ -39,14 +38,22 @@ export default class LoginScreen extends React.Component {
   constructor() {
     super();
     this.state = {
+      /* Übergangslösung zum Testen der Funktionen in den untergeordneten Screens, damit nicht jedes mal eine E-Mail Adresse und
+      Passwort eingegeben werden muss. Gibt der Benutzer sowohl im TextInput "EMail" als auch "Passwort" nichts ein,
+      werden die nachfolgenden Daten zum Login verwendet */
       userName: 'jon@test.de',
       password: 'Blockartuser3',
+      //State, der für die Anzeige des Loading-Spinners verwendet wird
       progress: false,
       screenWidth: Math.round(Dimensions.get('window').width),
       screenHeight: Math.round(Dimensions.get('window').height),
+     /*  Owner und User-Daten, die nach dem Login per API-Call aus der Datenbank geholt werden und anschließende dem Carousel-Screen übergeben werden, 
+      damit dieser von Anfang an die aktuellen Owner-Informationen über alle Bilder hat. */
       owners: [],
       users: [],
     };
+
+    //Okta-Authentifizierung
     var OktaAuth = require('@okta/okta-auth-js');
     var config = {
       url: 'https://dev-665917.okta.com',
@@ -56,37 +63,44 @@ export default class LoginScreen extends React.Component {
   }
 
 
-
+  //Diese Funktion wird beim eigentlichen Login verwendet
   async login() {
     let self = this;
     this.setState({ progress: true });
     let owners;
     let users;
 
+    /* Zunächst erfolgt ein Call zu unserer API, der alle Owner-Daten, sprich die Bilder mit ihren zugeordneten Eigentümern,
+    per JSON zurückgibt */
     axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
       // console.log(response.data.response);
       owners = response.data.response;
 
+      /* Innerhalb des ersten API-Calls erfolgt im Erfolgsfall ein zweiter API-Call, der alle User-Informationen aus der Datenbank
+      per JSON zurückgibt */
       axios.get('http://blockarthdm.herokuapp.com/api/users/').then(response => {
-      // console.log(response.data.response);
-      users = response.data.response;
+        // console.log(response.data.response);
+        users = response.data.response;
 
+
+      })
+        //Scheitert der zweite API-Call wird ein Window-Alert ausgegeben
+        .catch(err => {
+          console.log(err);
+          Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+          self.setState({ progress: false });
+        });
 
     })
+      //Scheitert der erste API-Call wird ein Window-Alert ausgegeben
       .catch(err => {
         console.log(err);
         Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
         self.setState({ progress: false });
       });
 
-    })
-      .catch(err => {
-        console.log(err);
-        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-        self.setState({ progress: false });
-      });
 
-
+    //Ab hier erfolgt die eigentliche Authentifizierung. Hierbei wird die signIn Funktion aus dem oben importierten OktaAuth-File aufgerufen
     this.authClient
       .signIn({
         username: this.state.userName,
@@ -101,11 +115,14 @@ export default class LoginScreen extends React.Component {
           // console.log(owners);
           // console.log(users);
           const { navigate } = self.props.navigation;
+          /* Navigation mit dem StackNavigator zum Hauptfenster CarouselScreen
+          Diesem werden die Owner- und User-Daten aus den API-Calls mitgegeben */
           navigate('Carousel', { transaction: transaction, users: users, owners: owners, auth: self.authClient });
         } else {
           throw 'We cannot handle the ' + transaction.status + ' status';
         }
       })
+      //Im Fehlerfall wird ein Window-Alert ausgegeben
       .fail(function (err) {
         Alert.alert("Der Login war nicht erfolgreich!");
         console.error(err);
@@ -114,7 +131,12 @@ export default class LoginScreen extends React.Component {
 
   }
 
+  /* Will der Benutzer sich für die Applikation registrieren, wird er in einen In-App-Browser weitergeleitet. 
+  Dort kann er sich für die Applikation mit Okta registrieren. Okta stellt allerdings auch eine gut-dokumentierte API zur Verfügung,
+  mithilfe derer die Registrierung auch direkt aus der App erfolgen kann (siehe https://developer.okta.com/docs/reference/).
 
+  Für die Registrierung muss in der Okta-Applikation die self-service Registration aktiviert sein
+   */
   async openLink() {
     try {
       const url = 'https://dev-665917.okta.com/signin/register'
@@ -158,7 +180,7 @@ export default class LoginScreen extends React.Component {
   }
 
 
-
+  //Rendern der Screen-Komponenten
   render() {
 
     return (
@@ -175,7 +197,7 @@ export default class LoginScreen extends React.Component {
             textContent={'Loading...'}
             textStyle={styles.spinnerTextStyle}
           />
-
+          
           <ImageBackground
             source={require('./components/background.jpg')}
             imageStyle={{ opacity: 0.5 }}

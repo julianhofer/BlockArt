@@ -3,6 +3,10 @@ import {View, Image, Text, Dimensions} from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
+/* 
+Erweiterung des BlockchainLoaders (gleicher Ordner). Sobald nach Aufruf der Verkauf-Funktion im Trader die Blockchain-Transaktion 
+länger als 30 Sekunden dauert, wird der Benutzer hiermit informiert, dass die Transaktion länger als gewöhnlich dauert */
+
 class BlockchainLoaderExtended extends React.Component{
     render(){
         return(

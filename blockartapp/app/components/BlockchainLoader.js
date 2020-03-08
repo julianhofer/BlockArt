@@ -3,6 +3,11 @@ import {View, Image, Text, Dimensions} from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
+/* 
+Dieser benutzerdefinierte Loader wird im Trader-Screen während der Blockchain Transaktion angezeigt
+Dauert die Transaktion länger als 30 Sekunden wird der BlockchainLoaderExtended angezeigt. Dieser erhält die gleiche Ladeanimation
+mit einer veränderten Information für den Benutzer */
+
 class BlockchainLoader extends React.Component{
     render(){
         return(

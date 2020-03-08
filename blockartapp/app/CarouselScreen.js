@@ -1,4 +1,9 @@
-import React, { Component, Fragment } from 'react';
+/* Dieser Screen ist der Hauptbildschirm in der App und beinhaltet die wichtigsten Funktionalitäten für den Benutzer.
+Hier wird das Bilder-Karusell implementiert und die Eigentumsinformationen über alle Bilder werden angezeigt. 
+Ist der eingeloggte Benutzer der Besitzer eines Bildes, wird ihm ein Button zum Verkauf des Kunstwerkes angezeigt, der ihn 
+auf den Trader-Screen bringt */
+
+import React, { Component, Fragment, useCallback } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -39,10 +44,10 @@ class CarouselScreen extends Component {
       ownerName: "",
       artHash: null,
       progress: false,
-      refreshing: false, 
+      refreshing: false,
       owners: [],
       users: [],
-      index : null,
+      index: null,
 
     }
 
@@ -51,7 +56,7 @@ class CarouselScreen extends Component {
 
   }
 
-
+  //Initialisierung des Karusells
   init() {
     this.state = {
       videos: [
@@ -75,8 +80,10 @@ class CarouselScreen extends Component {
 
   }
 
+  /* Wenn der Benutzer zu einem Bild im Karusell swiped, müssen auch die Textfelder geändert werden, die die Informationen über
+  den Bildtitel, Eigentümer etc. bereitstellen. Dafür wird der Index des Bildes im Karusell herangezogen */
   changeText(index) {
-    this.setState({index : index});
+    this.setState({ index: index });
     if (index == 0) {
       this.setState({
         title: "Treeblock 001",
@@ -104,10 +111,14 @@ class CarouselScreen extends Component {
     }
   }
 
+/* 
+  Hilfsfunktion zum Herausfinden des Eigentümers eines bestimmten Bildes. Es wird in der State-Variable Owners (Array) nachgeschaut. 
+  Ist diese noch nicht definiert, wird in der Props-Variable Owners (Array) nachgeschaut. 
+  Dieses Array wird dem CarouselScreen vom LoginScreen nach dem Login übergeben. */
   async getOwnerOf(artHash) {
     console.log(this.state.owners);
-    if(this.state.owners !== undefined){
-      
+    if (this.state.owners !== undefined) {
+
       this.state.owners.map((owner) => {
         if (owner.artHash === artHash) {
           console.log(owner.artHash);
@@ -116,37 +127,41 @@ class CarouselScreen extends Component {
         }
       })
     }
-    else if(this.props.navigation.getParam('owners') !== undefined){
+    else if (this.props.navigation.getParam('owners') !== undefined) {
       let owners = this.props.navigation.getParam('owners', null);
-    owners.map((owner) => {
-      if (owner.artHash === artHash) {
-        console.log(owner.artHash);
-        console.log(owner.user_token);
-        this.getOwnername(owner.user_token);
-      }
-    })
+      owners.map((owner) => {
+        if (owner.artHash === artHash) {
+          console.log(owner.artHash);
+          console.log(owner.user_token);
+          this.getOwnername(owner.user_token);
+        }
+      })
     }
-    
+
 
   }
 
+  /* 
+  Hilfsfunktion zum Herausfinden des Eigentümer-Namens eines bestimmten Bildes. Es wird in der State-Variable Users (Array) nachgeschaut. 
+  Ist diese noch nicht definiert, wird in der Props-Variable Users (Array) nachgeschaut. 
+  Dieses Array wird dem CarouselScreen vom LoginScreen nach dem Login übergeben. */
   async getOwnername(user_token) {
     console.log(this.state.users);
-    if(this.state.users !== undefined){
+    if (this.state.users !== undefined) {
       this.state.users.map((user) => {
         if (user.user_token === user_token) {
           this.setState({ ownerName: user.username, owner: user.user_token });
         }
       })
     }
-    else if(this.props.navigation.getParam('users') !== undefined){
-    let users = this.props.navigation.getParam('users', null);
-    users.map((user) => {
-      if (user.user_token === user_token) {
-        this.setState({ ownerName: user.username, owner: user.user_token });
-      }
-    })
-  }
+    else if (this.props.navigation.getParam('users') !== undefined) {
+      let users = this.props.navigation.getParam('users', null);
+      users.map((user) => {
+        if (user.user_token === user_token) {
+          this.setState({ ownerName: user.username, owner: user.user_token });
+        }
+      })
+    }
   }
 
 
@@ -173,6 +188,7 @@ class CarouselScreen extends Component {
     );
   }
 
+  //Diese Funktion wird bei jedem Event des Karusells aufgerufen (Klick, Swipe, Refresh)
   _renderItem = ({ item, index }) => {
     console.log("rendering,", index, item)
     return (
@@ -201,6 +217,8 @@ class CarouselScreen extends Component {
     this.changeText(index)
   }
 
+
+  //Diese Funktion ist eine React-Funktion, die immer nach dem erfolgreichen Laden aller Komponenten aufgerufen wird
   componentDidMount() {
 
 
@@ -254,6 +272,9 @@ class CarouselScreen extends Component {
 
 
   }
+
+ /*  Nach dem "Unmounten" von Komponenten, d.h wenn die App geschlossen wird oder zu einem anderen Screen navigiert wird, 
+  müssen verwendete Ressourcen wieder freigegeben werden */
   componentWillUnmount() {
     NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
     NfcManager.unregisterTagEvent().catch(() => 0);
@@ -263,6 +284,7 @@ class CarouselScreen extends Component {
     NfcManager.unregisterTagEvent().catch(() => 0);
   }
 
+  //Kunstwerk-Lesen per NFC Funktion
   _test = async () => {
     try {
       await NfcManager.registerTagEvent();
@@ -273,18 +295,22 @@ class CarouselScreen extends Component {
 
   }
 
+  //Funktion zum Verkaufen eines Kunstwerkes
   _sell = async () => {
     this.setState({ progress: true });
 
     // Alert.alert("Sell artwork " + this.state.artHash);
 
     const artHash = this.state.artHash;
+    //alternative Bild-URL, sollte das eigentliche Kunstwerk von Google-Drive nicht geladen werden können
     let pictureURL = "https://image.shutterstock.com/image-vector/sample-stamp-grunge-texture-vector-600w-1389188336.jpg";
     this.state.videos.map((picture) => {
       if (picture.id === artHash) {
         pictureURL = picture.thumbnail;
       }
     });
+
+    // API-Call, der alle User in unserer Datenbank, die nicht Eigentümer des zu verkaufenden Kunstwerkes sind, per JSON zurückgibt
     axios.get(`http://blockarthdm.herokuapp.com/api/users/arthash/${artHash}`)
       .then(response => {
         //   const rec = response.data.response;
@@ -294,7 +320,8 @@ class CarouselScreen extends Component {
         this.setState({ progress: false });
 
 
-
+        /* Navigieren zum Trader-Screen mit den vom LoginScreen übergebenen Transkationsdaten (eingeloggter Benutzer, Session-ID etc.) 
+        und weiteren Informationen wie dem ArtHash des zu verkaufenden Bildes, den im obigen API-Call geholten Usern und der Bild-URL von Google Drive */
         this.props.navigation.navigate('Trader', { transaction: this.props.navigation.getParam('transaction', 'NO-ID'), artHash: this.state.artHash, artwork: this.state.title, recipients: response.data.response, url: pictureURL });
       })
       .catch(err => {
@@ -305,41 +332,55 @@ class CarouselScreen extends Component {
 
   }
 
+  //Vorübergehende Kaufen-Funktion eines Bildes. Der Blockchain-Mechanismus dafür ist noch nicht implementiert
   _buy = async () => {
     Alert.alert("Buy artwork " + this.state.title)
   }
 
 
+  //Funktion, die beim Klick auf den User-Icon aufgerufen wird
   _profile = async () => {
-   
-   
-      this.props.navigation.navigate('Profile', { transaction: this.props.navigation.getParam('transaction', 'NO-ID'), auth: this.props.navigation.getParam('auth', 'NO-ID') });
-   
-   
+
+    /* Navigation zum Profile-Screen mit den vom LoginScreen erhalteten Transaktionsdaten (eingeloggter Benutzer, Session ID-etc.)
+    und den Authentifizierungs-Daten */
+    this.props.navigation.navigate('Profile', { transaction: this.props.navigation.getParam('transaction', 'NO-ID'), auth: this.props.navigation.getParam('auth', 'NO-ID') });
+
+
   }
 
+  //Funktion, die beim Refresh des Screens aufgerufen wird (Swipe-Down)
   _onRefresh = () => {
-    this.setState({refreshing: true});
+    this.setState({ refreshing: true });
     this.refreshData().then(() => {
-      this.setState({refreshing: false});
+      this.setState({ refreshing: false });
     });
   }
 
-  async refreshData () {
+  //Eigentlicher Refresh aller Daten
+  async refreshData() {
     let owners;
     let users;
     let self = this;
 
+    //API-Call, der alle aktuellen Eigentümer-Daten per JSON aus der Datenbank zurückgibt
     axios.get('http://blockarthdm.herokuapp.com/api/ownership/').then(response => {
-       console.log(response.data.response);
+      console.log(response.data.response);
 
-      self.setState({owners: response.data.response});
-
+      //Die erhaltenen Daten werden im State gespeichert
+      self.setState({ owners: response.data.response });
+      //API-Call der alle aktuellen Benutzerinformationen per JSOn aus der Datenbank zurückgibt
       axios.get('http://blockarthdm.herokuapp.com/api/users/').then(response => {
-       console.log(response.data.response);
+        console.log(response.data.response);
+        //Die erhaltenen Daten werden im State gespeichert
+        self.setState({ users: response.data.response });
 
-      self.setState({users: response.data.response});
 
+      })
+        .catch(err => {
+          console.log(err);
+          Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
+          self.setState({ progress: false });
+        });
 
     })
       .catch(err => {
@@ -348,13 +389,7 @@ class CarouselScreen extends Component {
         self.setState({ progress: false });
       });
 
-    })
-      .catch(err => {
-        console.log(err);
-        Alert.alert("Es konnte keine Verbindung zum Backend hergestellt werden");
-        self.setState({ progress: false });
-      });
-
+    
     this.changeText(this.state.index);
 
 
@@ -362,8 +397,14 @@ class CarouselScreen extends Component {
 
   }
 
-
+//Rendern aller Komponenten
   render() {
+
+    /* Die artTradeArea befindet sich ganz unten auf der Seite und besteht aus einem Button zum verkaufen der Kunstwerke
+    Diese Funktion wird allerdings nur dem Eigentümer eines Bildes angeboten.
+    Für die Abfrage, ob ein Kunstwerk dem eingeloggten Benutzer gehört, wird die eindeutige User-ID, die wir von Okta bekommen, verwendet.
+    Es geschieht ein Abgleich dieser User-ID mit den Eigentümer-Informationen aus der Datenbank.
+    In der Datenbank sind die Eigentümerinformationen über die Verknüpfung zwischen User-ID und Art-Hash gespeichert */
     let artTradeArea;
 
     {
@@ -389,18 +430,20 @@ class CarouselScreen extends Component {
       //  }
     }
 
+
+    //Eigentliche Deklaration der App-Komponenten
     return (
       <View style={{ flex: 1 }}>
 
         <Fragment>
           <SafeAreaView style={styles.container}>
             <ScrollView keyboardShouldPersistTaps="always"
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this._onRefresh}
-              />
-            }>
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this._onRefresh}
+                />
+              }>
               <Spinner
                 visible={this.state.progress}
                 textContent={'Loading...'}

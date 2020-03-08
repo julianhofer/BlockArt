@@ -1,3 +1,7 @@
+/* Der Trader-Screen beinhaltet die Eigentliche Funktionalität der Blockchain. Hier werden die API-Calls aufgerufen, die auf der 
+Blockchain die Eigentümerinformationen ändern.
+*/
+
 import React, { Fragment } from 'react';
 import {
     SafeAreaView,
@@ -49,7 +53,7 @@ class Trader extends React.Component {
 
     }
 
-
+    //Funktion zum Verkaufen eines Kunstwerkes, nachdem der Empfänger im Drop-Down ausgewählt wurde
     _sell = () => {
         let self = this;
         this.setState({ progress: true });
@@ -70,6 +74,8 @@ class Trader extends React.Component {
 
         console.log("USER_TOKEN: " + userID + "ARTHASH: " + artHash + "BUYER: " + buyer);
 
+
+        //API-Call, der den neuen Kunstwerkbesitzer in der Blockchain ändert
         axios({
             method: 'post',
             url: 'http://blockarthdm.herokuapp.com/api/ownership/newOwner',
