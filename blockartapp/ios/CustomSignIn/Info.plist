@@ -53,5 +53,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NFCReaderUsageDescription</key>
+<string>Bitte geben Sie die NFC Funktionen frei. Danke. Ciao.</string>
 </dict>
 </plist>

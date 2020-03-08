@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="67f4faf4-4fb1-4e5f-88c7-d0bfeec154fe" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/blockartapp/app/CarouselScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/app/CarouselScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blockartapp/app/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/app/LoginScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blockartapp/app/ProfileScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/app/ProfileScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blockartapp/app/Trader.js" beforeDir="false" afterPath="$PROJECT_DIR$/blockartapp/app/Trader.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -10,10 +13,14 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="testRunner" value="GRADLE" />
+    <option name="delegatedBuild" value="true" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="170" />
     <option name="y" value="50" />
     <option name="width" value="3500" />
@@ -24,9 +31,30 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
-      <pane id="ProjectPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="BlockArt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BlockArt" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="BlockArt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BlockArt" type="462c0819:PsiDirectoryNode" />
+              <item name="blockartapp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="BlockArt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BlockArt" type="462c0819:PsiDirectoryNode" />
+              <item name="blockartapp" type="462c0819:PsiDirectoryNode" />
+              <item name="android" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="RunDashboard">
@@ -55,7 +83,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-6" y="-6" width="1549" height="837" extended-state="7" />
+    <frame x="-6" y="-6" width="1549" height="837" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
       <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.21664464" />
