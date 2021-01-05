@@ -11,7 +11,7 @@
     "@okta/configuration-validation": "^0.4.1",
     "@okta/okta-auth-js": "^2.8.0",
     "@okta/okta-react-native": "^1.2.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-preset-react-native": "^2.1.0",
     "react": "16.8.6",
     "react-native": "0.60.5",
